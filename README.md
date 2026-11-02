@@ -1,0 +1,2 @@
+# Static-hub
+Duels script
