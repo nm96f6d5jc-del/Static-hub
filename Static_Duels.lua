@@ -8,7 +8,6 @@ if type(__SH_KEY) ~= "string" or __SH_KEY == "" then
 end
 
 local __SH_HTTP = game:GetService("HttpService")
-
 local __SH_URL = "https://cfvotmcmpyhsxczptdct.supabase.co/functions/v1/static-hub-license?key="
     .. __SH_HTTP:UrlEncode(__SH_KEY)
 
@@ -25,12 +24,13 @@ local __SH_DECODE_OK, __SH_DATA = pcall(function()
     return __SH_HTTP:JSONDecode(__SH_RESULT)
 end)
 
-if not __SH_DECODE_OK or __SH_DATA.valid ~= true then
+if not __SH_DECODE_OK or type(__SH_DATA) ~= "table" or __SH_DATA.valid ~= true then
     warn("Static Hub: Invalid key")
     return
 end
 
 -- LICENCE VERIFIED
+
 -- Static Hub Duel Script
 -- Original source credit: Xlu0 AndPrime
 
@@ -6329,7 +6329,7 @@ local function setupSpeedIndicator(char)
     discordLabel.Name = "DiscordLbl"
     discordLabel.Size = UDim2.new(1, 0, 0.38, 0)
     discordLabel.BackgroundTransparency = 1
-    discordLabel.Text = "discord.gg/Q8Cb3twtwX"
+    discordLabel.Text = "discord.gg/YF8vD7w6m"
     discordLabel.TextColor3 = gray
     discordLabel.Font = Enum.Font.GothamBold
     discordLabel.TextScaled = true
@@ -6642,13 +6642,13 @@ savedMainPositionTable = savedMainPositionTable or udim2ToTable(Main.Position)
 
 -- ExeOpenMainUI / ExeCloseMainUI defined after MiniFrame
 
-Main.BackgroundColor3 = COLORS.bg
+Main.BackgroundColor3 = Color3.fromRGB(4, 3, 8)
 Main.BorderSizePixel = 0
 Main.Active = true
 Main.ClipsDescendants = false
 Main.Parent = Gui
 corner(Main, 22)
-stroke(Main, Color3.fromRGB(175, 220, 255), 1.5, 0.10)
+stroke(Main, Color3.fromRGB(139, 75, 220), 1.5, 0.08)
 
 -- STATIC DUELS: blue-chrome starfield background.
 -- To show Gojo, upload your chosen Gojo artwork to Roblox and set GOJO_IMAGE_ID
@@ -6685,8 +6685,8 @@ for i = 1, 42 do
     star.BorderSizePixel = 0
     star.Text = (i % 7 == 0) and "✦" or "·"
     star.Font = Enum.Font.GothamBold
-    star.TextColor3 = (i % 3 == 0) and Color3.fromRGB(220, 242, 255) or Color3.fromRGB(105, 175, 235)
-    star.TextTransparency = (i % 4 == 0) and 0.28 or 0.52
+    star.TextColor3 = (i % 3 == 0) and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(174, 112, 255)
+    star.TextTransparency = (i % 4 == 0) and 0.18 or 0.42
     star.TextSize = starRng:NextInteger(9, 18)
     star.Size = UDim2.new(0, 20, 0, 20)
     star.Position = UDim2.new(starRng:NextNumber(0.02, 0.94), 0, starRng:NextNumber(0.02, 0.94), 0)
@@ -6791,41 +6791,49 @@ end)
 local MiniFrame = Instance.new("TextButton")
 MiniFrame.Name = "MiniFrame"
 local _mobileBtnBase = math.floor((tonumber(_G.ExeMobileButtonScale) or 1) * 58)
-local miniBtnSize = math.floor(_mobileBtnBase * 0.70)
-if miniBtnSize < 52 then miniBtnSize = 52 end
-if miniBtnSize > 84 then miniBtnSize = 84 end
-MiniFrame.Size = UDim2.new(0, miniBtnSize, 0, miniBtnSize)
-local MINI_DEFAULT_POSITION = UDim2.new(0, 20, 0.5, -miniBtnSize / 2)
+-- Wide Candy-Hub-style launcher, rebranded for Static Duels.
+local miniBtnWidth = math.clamp(math.floor(_mobileBtnBase * 4.65), 190, 270)
+local miniBtnHeight = math.clamp(math.floor(_mobileBtnBase * 1.28), 58, 76)
+MiniFrame.Size = UDim2.new(0, miniBtnWidth, 0, miniBtnHeight)
+local MINI_DEFAULT_POSITION = UDim2.new(0, 20, 0.5, -miniBtnHeight / 2)
 MiniFrame.Position = MINI_DEFAULT_POSITION
-MiniFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-MiniFrame.BackgroundTransparency = 0
+MiniFrame.BackgroundColor3 = Color3.fromRGB(8, 7, 18)
+MiniFrame.BackgroundTransparency = 0.04
 MiniFrame.BorderSizePixel = 0
-MiniFrame.Text = "MENU"
-MiniFrame.TextColor3 = Color3.fromRGB(200, 200, 200)
+MiniFrame.Text = "STATIC DUELS"
+MiniFrame.TextColor3 = Color3.fromRGB(205, 218, 255)
 MiniFrame.Font = Enum.Font.GothamBlack
-MiniFrame.TextSize = math.max(9, math.floor(miniBtnSize * 0.24))
+MiniFrame.TextSize = math.clamp(math.floor(miniBtnHeight * 0.34), 18, 24)
 MiniFrame.AutoButtonColor = false
 MiniFrame.Visible = false
 MiniFrame.Active = true
 MiniFrame.ZIndex = 100
 MiniFrame.Parent = Gui
-corner(MiniFrame, math.max(8, math.floor(miniBtnSize * 0.22)))
+corner(MiniFrame, math.floor(miniBtnHeight * 0.48))
+local miniChrome = Instance.new("UIGradient")
+miniChrome.Rotation = 0
+miniChrome.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(62, 91, 255)),
+    ColorSequenceKeypoint.new(0.48, Color3.fromRGB(128, 91, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(48, 190, 255)),
+})
+miniChrome.Parent = MiniFrame
 function _nxcClampMini(pos)
     local cam = Workspace.CurrentCamera
     local vp = cam and cam.ViewportSize or Vector2.new(800, 600)
     local x = pos.X.Scale * vp.X + pos.X.Offset
     local y = pos.Y.Scale * vp.Y + pos.Y.Offset
-    x = math.clamp(x, 0, math.max(0, vp.X - miniBtnSize))
-    y = math.clamp(y, 0, math.max(0, vp.Y - miniBtnSize))
+    x = math.clamp(x, 0, math.max(0, vp.X - miniBtnWidth))
+    y = math.clamp(y, 0, math.max(0, vp.Y - miniBtnHeight))
     return UDim2.new(0, x, 0, y)
 end
 if type(savedMiniPositionTable) == "table" then
     MiniFrame.Position = _nxcClampMini(tableToUDim2(savedMiniPositionTable, MINI_DEFAULT_POSITION))
 end
 local MiniExeStroke = Instance.new("UIStroke")
-MiniExeStroke.Color = Color3.fromRGB(120, 120, 120)
-MiniExeStroke.Thickness = 1.5
-MiniExeStroke.Transparency = 0.15
+MiniExeStroke.Color = Color3.fromRGB(135, 160, 255)
+MiniExeStroke.Thickness = 2.2
+MiniExeStroke.Transparency = 0.04
 MiniExeStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 MiniExeStroke.Parent = MiniFrame
 
@@ -6986,7 +6994,7 @@ WHITE  = Color3.fromRGB(220, 235, 255),
 FOREST = Color3.fromRGB(40, 100, 190),
 }
 
-_G.ExeThemeName = "BLUE"
+_G.ExeThemeName = "PURPLE"
 currentBackground = tonumber(savedConfig.currentBackground) or currentBackground
 _G.ExeBodyLockEnabled = savedConfig.bodyLockEnabled == true
 _G.ExeBodyLockRadius = tonumber(savedConfig.bodyLockRadius) or _G.ExeBodyLockRadius or 60
@@ -6997,211 +7005,73 @@ _G.ExeHeadlessEnabled = savedConfig.headlessEnabled == true
 _G.ExeKorbloxEnabled = savedConfig.korbloxEnabled == true
 local BgImage = nil
 function applyBackground(index)
-Main.BackgroundColor3 = COLORS.bg
+Main.BackgroundColor3 = Color3.fromRGB(4, 3, 8)
 currentBackground = 0
 return "None"
 end
 applyBackground(0)
--- Nine Duels style header bar
+-- Static Hub header: clean black starfield, purple/white bold lettering.
 local HeaderBar = Instance.new("Frame")
 HeaderBar.Name = "HeaderBar"
-HeaderBar.BackgroundColor3 = Color3.fromRGB(10, 22, 42)
-HeaderBar.BackgroundTransparency = 0.05
+HeaderBar.BackgroundColor3 = Color3.fromRGB(5, 4, 10)
+HeaderBar.BackgroundTransparency = 0.02
 HeaderBar.BorderSizePixel = 0
 HeaderBar.Size = UDim2.new(1, -20, 0, 56)
 HeaderBar.Position = UDim2.new(0, 10, 0, 10)
 HeaderBar.ZIndex = 8
 HeaderBar.Parent = Main
 corner(HeaderBar, 14)
-stroke(HeaderBar, Color3.fromRGB(45, 130, 255), 1.0, 0.12)
+stroke(HeaderBar, Color3.fromRGB(145, 88, 220), 1.4, 0.08)
 
--- Static Duels glossy electric-blue header background
-local HeaderGradient = Instance.new("UIGradient")
-HeaderGradient.Name = "StaticDuelsBlueGradient"
-HeaderGradient.Rotation = 0
-HeaderGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 18, 58)),
-    ColorSequenceKeypoint.new(0.22, Color3.fromRGB(0, 92, 255)),
-    ColorSequenceKeypoint.new(0.48, Color3.fromRGB(0, 35, 120)),
-    ColorSequenceKeypoint.new(0.72, Color3.fromRGB(0, 115, 255)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 14, 48))
-})
-HeaderGradient.Parent = HeaderBar
-
--- Glossy liquid-blue highlights (built from native UI objects; no image asset needed)
-local HeaderHighlight = Instance.new("Frame")
-HeaderHighlight.Name = "LiquidBlueHighlight"
-HeaderHighlight.BackgroundColor3 = Color3.fromRGB(90, 205, 255)
-HeaderHighlight.BackgroundTransparency = 0.76
-HeaderHighlight.BorderSizePixel = 0
-HeaderHighlight.Size = UDim2.new(1, -18, 0, 13)
-HeaderHighlight.Position = UDim2.new(0, 9, 0, 3)
-HeaderHighlight.ZIndex = 9
-HeaderHighlight.Parent = HeaderBar
-corner(HeaderHighlight, 999)
-local HighlightGradient = Instance.new("UIGradient")
-HighlightGradient.Rotation = 0
-HighlightGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 35, 110)),
-    ColorSequenceKeypoint.new(0.24, Color3.fromRGB(140, 225, 255)),
-    ColorSequenceKeypoint.new(0.48, Color3.fromRGB(0, 100, 255)),
-    ColorSequenceKeypoint.new(0.72, Color3.fromRGB(120, 220, 255)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 25, 90))
-})
-HighlightGradient.Transparency = NumberSequence.new({
-    NumberSequenceKeypoint.new(0.00, 0.55),
-    NumberSequenceKeypoint.new(0.20, 0.12),
-    NumberSequenceKeypoint.new(0.50, 0.40),
-    NumberSequenceKeypoint.new(0.80, 0.12),
-    NumberSequenceKeypoint.new(1.00, 0.55)
-})
-HighlightGradient.Parent = HeaderHighlight
-
--- Curved glossy blobs create a liquid-metal look behind the title
-for i, bubbleData in ipairs({
-    {x = 0.06, y = 0.62, w = 0.18, h = 0.34, c = Color3.fromRGB(0, 120, 255)},
-    {x = 0.28, y = 0.08, w = 0.13, h = 0.22, c = Color3.fromRGB(80, 190, 255)},
-    {x = 0.58, y = 0.66, w = 0.22, h = 0.26, c = Color3.fromRGB(0, 90, 230)},
-    {x = 0.78, y = 0.10, w = 0.15, h = 0.28, c = Color3.fromRGB(70, 175, 255)},
-    {x = 0.92, y = 0.60, w = 0.12, h = 0.30, c = Color3.fromRGB(0, 115, 255)}
-}) do
-    local bubble = Instance.new("Frame")
-    bubble.Name = "LiquidBlueBubble" .. i
-    bubble.AnchorPoint = Vector2.new(0.5, 0.5)
-    bubble.Position = UDim2.new(bubbleData.x, 0, bubbleData.y, 0)
-    bubble.Size = UDim2.new(bubbleData.w, 0, bubbleData.h, 0)
-    bubble.BackgroundColor3 = bubbleData.c
-    bubble.BackgroundTransparency = 0.42
-    bubble.BorderSizePixel = 0
-    bubble.ZIndex = 9
-    bubble.Parent = HeaderBar
-    corner(bubble, 999)
-    local bubbleGradient = Instance.new("UIGradient")
-    bubbleGradient.Rotation = 90
-    bubbleGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(170, 235, 255)),
-        ColorSequenceKeypoint.new(0.35, bubbleData.c),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 12, 55))
-    })
-    bubbleGradient.Transparency = NumberSequence.new({
-        NumberSequenceKeypoint.new(0, 0.18),
-        NumberSequenceKeypoint.new(0.5, 0.45),
-        NumberSequenceKeypoint.new(1, 0.20)
-    })
-    bubbleGradient.Parent = bubble
+local HeaderStars = Instance.new("Frame")
+HeaderStars.Name = "HeaderStars"
+HeaderStars.BackgroundTransparency = 1
+HeaderStars.BorderSizePixel = 0
+HeaderStars.Size = UDim2.new(1, 0, 1, 0)
+HeaderStars.ClipsDescendants = true
+HeaderStars.ZIndex = 9
+HeaderStars.Parent = HeaderBar
+local headerStarRng = Random.new(82631)
+for i = 1, 22 do
+    local star = Instance.new("TextLabel")
+    star.Name = "HeaderStar" .. i
+    star.BackgroundTransparency = 1
+    star.BorderSizePixel = 0
+    star.Text = (i % 6 == 0) and "✦" or "·"
+    star.Font = Enum.Font.GothamBold
+    star.TextColor3 = (i % 3 == 0) and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(174, 112, 255)
+    star.TextTransparency = 0.3
+    star.TextSize = headerStarRng:NextInteger(8, 14)
+    star.Size = UDim2.new(0, 16, 0, 16)
+    star.Position = UDim2.new(headerStarRng:NextNumber(0.02, 0.96), 0, headerStarRng:NextNumber(0.05, 0.85), 0)
+    star.ZIndex = 9
+    star.Parent = HeaderStars
 end
-
--- Thin angled shine streaks
-for i, streakData in ipairs({
-    {x = 0.17, w = 0.11, r = -18},
-    {x = 0.49, w = 0.08, r = -18},
-    {x = 0.72, w = 0.12, r = -18}
-}) do
-    local streak = Instance.new("Frame")
-    streak.Name = "BlueShineStreak" .. i
-    streak.BackgroundColor3 = Color3.fromRGB(190, 240, 255)
-    streak.BackgroundTransparency = 0.72
-    streak.BorderSizePixel = 0
-    streak.AnchorPoint = Vector2.new(0.5, 0.5)
-    streak.Position = UDim2.new(streakData.x, 0, 0.5, 0)
-    streak.Size = UDim2.new(streakData.w, 0, 1.4, 0)
-    streak.Rotation = streakData.r
-    streak.ZIndex = 9
-    streak.Parent = HeaderBar
-    corner(streak, 999)
-    local streakGradient = Instance.new("UIGradient")
-    streakGradient.Transparency = NumberSequence.new({
-        NumberSequenceKeypoint.new(0, 1),
-        NumberSequenceKeypoint.new(0.45, 0.25),
-        NumberSequenceKeypoint.new(1, 1)
-    })
-    streakGradient.Parent = streak
-end
-
-local HeaderGlow = Instance.new("Frame")
-HeaderGlow.Name = "HeaderGlow"
-HeaderGlow.BackgroundColor3 = Color3.fromRGB(0, 145, 255)
-HeaderGlow.BackgroundTransparency = 0.72
-HeaderGlow.BorderSizePixel = 0
-HeaderGlow.Size = UDim2.new(1, -10, 0, 2)
-HeaderGlow.Position = UDim2.new(0, 5, 1, -3)
-HeaderGlow.ZIndex = 10
-HeaderGlow.Parent = HeaderBar
-corner(HeaderGlow, 2)
-
-local TitleAccent = Instance.new("Frame")
-TitleAccent.Name = "TitleAccent"
-TitleAccent.BackgroundColor3 = Color3.fromRGB(190, 230, 255)
-TitleAccent.BorderSizePixel = 0
-TitleAccent.Size = UDim2.new(0, 3, 0, 28)
-TitleAccent.Position = UDim2.new(0, 12, 0.5, -14)
-TitleAccent.ZIndex = 10
-TitleAccent.Parent = HeaderBar
-corner(TitleAccent, 2)
-
--- Layered text gives STATIC DUELS a rounded, inflated blue-chrome look
--- similar to the reference lettering, using native Roblox UI text effects.
-local TitleChromeBack = Instance.new("TextLabel")
-TitleChromeBack.Name = "TitleChromeBack"
-TitleChromeBack.BackgroundTransparency = 1
-TitleChromeBack.Size = UDim2.new(1, -34, 1, -4)
-TitleChromeBack.Position = UDim2.new(0, 18, 0, 10)
-TitleChromeBack.Text = "STATIC DUELS"
-TitleChromeBack.TextColor3 = Color3.fromRGB(0, 20, 95)
-TitleChromeBack.TextTransparency = 0.02
-TitleChromeBack.TextStrokeColor3 = Color3.fromRGB(0, 95, 255)
-TitleChromeBack.TextStrokeTransparency = 0.05
-TitleChromeBack.Font = Enum.Font.GothamBlack
-TitleChromeBack.TextSize = 25
-TitleChromeBack.TextScaled = true
-TitleChromeBack.TextXAlignment = Enum.TextXAlignment.Left
-TitleChromeBack.ZIndex = 10
-TitleChromeBack.Parent = HeaderBar
-
-local TitleShadow = Instance.new("TextLabel")
-TitleShadow.Name = "TitleBlueDepth"
-TitleShadow.BackgroundTransparency = 1
-TitleShadow.Size = UDim2.new(1, -34, 1, -4)
-TitleShadow.Position = UDim2.new(0, 23, 0, 15)
-TitleShadow.Text = "STATIC DUELS"
-TitleShadow.TextColor3 = Color3.fromRGB(0, 45, 155)
-TitleShadow.TextTransparency = 0.02
-TitleShadow.TextStrokeColor3 = Color3.fromRGB(80, 185, 255)
-TitleShadow.TextStrokeTransparency = 0.12
-TitleShadow.Font = Enum.Font.GothamBlack
-TitleShadow.TextSize = 25
-TitleShadow.TextScaled = true
-TitleShadow.TextXAlignment = Enum.TextXAlignment.Left
-TitleShadow.ZIndex = 11
-TitleShadow.Parent = HeaderBar
 
 local Title = Instance.new("TextLabel")
 Title.Name = "Title"
 Title.BackgroundTransparency = 1
 Title.Size = UDim2.new(1, -34, 1, -4)
-Title.Position = UDim2.new(0, 22, 0, 10)
-Title.Text = "STATIC DUELS"
-Title.TextColor3 = Color3.fromRGB(235, 250, 255)
-Title.TextStrokeColor3 = Color3.fromRGB(20, 115, 255)
-Title.TextStrokeTransparency = 0.08
+Title.Position = UDim2.new(0, 22, 0, 2)
+Title.Text = "STATIC HUB"
+Title.TextColor3 = Color3.fromRGB(245, 238, 255)
+Title.TextStrokeColor3 = Color3.fromRGB(145, 70, 220)
+Title.TextStrokeTransparency = 0.25
 Title.Font = Enum.Font.GothamBlack
 Title.TextSize = 25
 Title.TextScaled = true
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.ZIndex = 12
 Title.Parent = HeaderBar
-Title.Visible = true
 
 local TitleChromeGradient = Instance.new("UIGradient")
-TitleChromeGradient.Name = "BlueChromeLettering"
+TitleChromeGradient.Name = "PurpleWhiteLettering"
 TitleChromeGradient.Rotation = 90
 TitleChromeGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-    ColorSequenceKeypoint.new(0.18, Color3.fromRGB(115, 205, 255)),
-    ColorSequenceKeypoint.new(0.38, Color3.fromRGB(0, 95, 255)),
-    ColorSequenceKeypoint.new(0.58, Color3.fromRGB(5, 35, 155)),
-    ColorSequenceKeypoint.new(0.76, Color3.fromRGB(85, 185, 255)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(225, 250, 255))
+    ColorSequenceKeypoint.new(0.35, Color3.fromRGB(221, 194, 255)),
+    ColorSequenceKeypoint.new(0.68, Color3.fromRGB(158, 93, 230)),
+    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(250, 245, 255))
 })
 TitleChromeGradient.Parent = Title
 
@@ -7210,14 +7080,14 @@ SubTitle.Name = "SubTitle"
 SubTitle.BackgroundTransparency = 1
 SubTitle.Size = UDim2.new(0, 200, 0, 14)
 SubTitle.Position = UDim2.new(0, 24, 0, 30)
-SubTitle.Text = "discord.gg/Q8Cb3twtwX"
-SubTitle.TextColor3 = Color3.fromRGB(130, 130, 135)
-SubTitle.Font = Enum.Font.Gotham
+SubTitle.Text = "discord.gg/YF8vD7w6m"
+SubTitle.TextColor3 = Color3.fromRGB(190, 155, 235)
+SubTitle.Font = Enum.Font.GothamBold
 SubTitle.TextSize = 10
 SubTitle.TextXAlignment = Enum.TextXAlignment.Left
 SubTitle.ZIndex = 12
 SubTitle.Parent = HeaderBar
-SubTitle.Visible = false
+SubTitle.Visible = true
 
 -- Main logo removed (Calcium-style header text only)
 local ExeLogoAsset = nil
@@ -10119,49 +9989,49 @@ end)
 section(Movement, "AUTO PLAY", 100)
 
 do
-    local duelModeRow = baseRow(Movement, "Duel Mode", 101)
-    duelModeRow.Size = UDim2.new(1,-4,0,42)
+    __SH_duelModeRow = baseRow(Movement, "Duel Mode", 101)
+    __SH_duelModeRow.Size = UDim2.new(1,-4,0,42)
 
-    local lbl = duelModeRow:FindFirstChild("Label")
-    if lbl then
-        lbl.Text = "Duel Mode"
-        lbl.Size = UDim2.new(0.35,0,1,0)
+    __SH_duelModeLabel = __SH_duelModeRow:FindFirstChild("Label")
+    if __SH_duelModeLabel then
+        __SH_duelModeLabel.Text = "Duel Mode"
+        __SH_duelModeLabel.Size = UDim2.new(0.35,0,1,0)
     end
 
-    local halfBtn = Instance.new("TextButton")
-    halfBtn.Name = "HalfButton"
-    halfBtn.Size = UDim2.new(0,58,0,28)
-    halfBtn.Position = UDim2.new(1,-134,0.5,-14)
-    halfBtn.BackgroundTransparency = 1
-    halfBtn.BorderSizePixel = 0
-    halfBtn.Text = "HALF"
-    halfBtn.Font = Enum.Font.GothamMedium
-    halfBtn.TextSize = 10
-    halfBtn.ZIndex = 20
-    halfBtn.Parent = duelModeRow
-    corner(halfBtn,6)
-    stroke(halfBtn,COLORS.strokeSoft,1,0.45)
+    __SH_halfBtn = Instance.new("TextButton")
+    __SH_halfBtn.Name = "HalfButton"
+    __SH_halfBtn.Size = UDim2.new(0,58,0,28)
+    __SH_halfBtn.Position = UDim2.new(1,-134,0.5,-14)
+    __SH_halfBtn.BackgroundTransparency = 1
+    __SH_halfBtn.BorderSizePixel = 0
+    __SH_halfBtn.Text = "HALF"
+    __SH_halfBtn.Font = Enum.Font.GothamMedium
+    __SH_halfBtn.TextSize = 10
+    __SH_halfBtn.ZIndex = 20
+    __SH_halfBtn.Parent = __SH_duelModeRow
+    corner(__SH_halfBtn,6)
+    stroke(__SH_halfBtn,COLORS.strokeSoft,1,0.45)
 
-    local fullBtn = Instance.new("TextButton")
-    fullBtn.Name = "FullButton"
-    fullBtn.Size = UDim2.new(0,58,0,28)
-    fullBtn.Position = UDim2.new(1,-70,0.5,-14)
-    fullBtn.BackgroundTransparency = 1
-    fullBtn.BorderSizePixel = 0
-    fullBtn.Text = "FULL"
-    fullBtn.Font = Enum.Font.GothamMedium
-    fullBtn.TextSize = 10
-    fullBtn.ZIndex = 20
-    fullBtn.Parent = duelModeRow
-    corner(fullBtn,6)
-    stroke(fullBtn,COLORS.strokeSoft,1,0.45)
+    __SH_fullBtn = Instance.new("TextButton")
+    __SH_fullBtn.Name = "FullButton"
+    __SH_fullBtn.Size = UDim2.new(0,58,0,28)
+    __SH_fullBtn.Position = UDim2.new(1,-70,0.5,-14)
+    __SH_fullBtn.BackgroundTransparency = 1
+    __SH_fullBtn.BorderSizePixel = 0
+    __SH_fullBtn.Text = "FULL"
+    __SH_fullBtn.Font = Enum.Font.GothamMedium
+    __SH_fullBtn.TextSize = 10
+    __SH_fullBtn.ZIndex = 20
+    __SH_fullBtn.Parent = __SH_duelModeRow
+    corner(__SH_fullBtn,6)
+    stroke(__SH_fullBtn,COLORS.strokeSoft,1,0.45)
 
-    local function refreshDuelBtns()
-        halfBtn.TextColor3 = (_G.ExeDuelMode == "half")
+    function __SH_refreshDuelBtns()
+        __SH_halfBtn.TextColor3 = (_G.ExeDuelMode == "half")
             and Color3.fromRGB(255,255,255)
             or Color3.fromRGB(140,140,140)
 
-        fullBtn.TextColor3 = (_G.ExeDuelMode == "full")
+        __SH_fullBtn.TextColor3 = (_G.ExeDuelMode == "full")
             and Color3.fromRGB(255,255,255)
             or Color3.fromRGB(140,140,140)
 
@@ -10173,21 +10043,21 @@ do
         end
     end
 
-    _G.ExeRefreshDuelModeButtons = refreshDuelBtns
+    _G.ExeRefreshDuelModeButtons = __SH_refreshDuelBtns
 
-    halfBtn.MouseButton1Click:Connect(function()
+    __SH_halfBtn.MouseButton1Click:Connect(function()
         _G.ExeDuelMode = "half"
-        refreshDuelBtns()
+        __SH_refreshDuelBtns()
         if saveExeConfig then pcall(saveExeConfig) end
     end)
 
-    fullBtn.MouseButton1Click:Connect(function()
+    __SH_fullBtn.MouseButton1Click:Connect(function()
         _G.ExeDuelMode = "full"
-        refreshDuelBtns()
+        __SH_refreshDuelBtns()
         if saveExeConfig then pcall(saveExeConfig) end
     end)
 
-    refreshDuelBtns()
+    __SH_refreshDuelBtns()
 end
 
 task.wait()
@@ -10216,7 +10086,7 @@ speedKeybindRow(Keybinds, "Insta Medusa", "MB_instaMedusa", 11.5)
 do
 THEME_ACCENT = Color3.fromRGB(255, 255, 255)
 THEME_ACCENT_DIM = Color3.fromRGB(160, 160, 160)
-PlayerESP = PlayerESP or {enabled=false, playerData={}, conns={}, discordText="discord.gg/Q8Cb3twtwX"}
+PlayerESP = PlayerESP or {enabled=false, playerData={}, conns={}, discordText="discord.gg/YF8vD7w6m"}
 BoxedESPOptions = BoxedESPOptions or {box=false, tracer=false}
 BoxedESPData = BoxedESPData or {}
 BoxedESPConn = BoxedESPConn or nil
@@ -16480,29 +16350,29 @@ local function drag(frame)
     end)
 end
 
--- Main card (black / white / gray theme)
+-- Pink Static Duels progress card; progress/state functions remain unchanged.
 local pbFrame = Instance.new("Frame", gui)
 pbFrame.Name = "StealBar"
 pbFrame.Size = UDim2.new(0, 420, 0, 72)
 local defaultStealPos = UDim2.new(0.5, -210, 1, -90)
 pbFrame.Position = tableToUDim2(_G.ExeStealBarPosition, defaultStealPos)
-pbFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 14)
-pbFrame.BackgroundTransparency = 0.08
+pbFrame.BackgroundColor3 = Color3.fromRGB(5, 4, 12)
+pbFrame.BackgroundTransparency = 0.02
 pbFrame.BorderSizePixel = 0
 pbFrame.Active = true
 pbFrame.ClipsDescendants = true
 Instance.new("UICorner", pbFrame).CornerRadius = UDim.new(0, 18)
 
 local pbSt = Instance.new("UIStroke", pbFrame)
-pbSt.Color = Color3.fromRGB(180, 180, 185)
-pbSt.Thickness = 1.4
-pbSt.Transparency = 0.25
+pbSt.Color = Color3.fromRGB(255, 42, 164)
+pbSt.Thickness = 2.2
+pbSt.Transparency = 0.02
 
 local pbGrad = Instance.new("UIGradient", pbFrame)
 pbGrad.Rotation = 90
 pbGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(28, 28, 32)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 12)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(13, 8, 22)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(5, 4, 11)),
 })
 
 drag(pbFrame)
@@ -16521,6 +16391,7 @@ stealAvatar.BackgroundColor3 = Color3.fromRGB(30, 30, 34)
 stealAvatar.BorderSizePixel = 0
 stealAvatar.ScaleType = Enum.ScaleType.Crop
 stealAvatar.ZIndex = 5
+stealAvatar.Visible = false
 Instance.new("UICorner", stealAvatar).CornerRadius = UDim.new(1, 0)
 local avStroke = Instance.new("UIStroke", stealAvatar)
 avStroke.Color = Color3.fromRGB(210, 210, 215)
@@ -16547,13 +16418,14 @@ timeLbl.TextColor3 = Color3.fromRGB(160, 160, 165)
 timeLbl.TextXAlignment = Enum.TextXAlignment.Left
 timeLbl.ZIndex = 5
 timeLbl.Text = ""
+timeLbl.Visible = false
 
 -- Big percent
 local progressPct = Instance.new("TextLabel", pbFrame)
 progressPct.Name = "Percent"
 progressPct.BackgroundTransparency = 1
-progressPct.Size = UDim2.new(0, 90, 0, 22)
-progressPct.Position = UDim2.new(0, 68, 0, 20)
+progressPct.Size = UDim2.new(0, 72, 0, 26)
+progressPct.Position = UDim2.new(0, 18, 0, 10)
 progressPct.Font = Enum.Font.GothamBlack
 progressPct.TextSize = 20
 progressPct.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -16565,10 +16437,10 @@ progressPct.Text = "0%"
 local fpsLbl = Instance.new("TextLabel", pbFrame)
 fpsLbl.Name = "FPS"
 fpsLbl.BackgroundTransparency = 1
-fpsLbl.Size = UDim2.new(0, 80, 0, 12)
-fpsLbl.Position = UDim2.new(0, 68, 0, 42)
+fpsLbl.Size = UDim2.new(0, 82, 0, 16)
+fpsLbl.Position = UDim2.new(1, -190, 0, 18)
 fpsLbl.Font = Enum.Font.GothamBold
-fpsLbl.TextSize = 10
+fpsLbl.TextSize = 11
 fpsLbl.TextColor3 = Color3.fromRGB(140, 140, 145)
 fpsLbl.TextXAlignment = Enum.TextXAlignment.Left
 fpsLbl.ZIndex = 5
@@ -16578,8 +16450,8 @@ fpsLbl.Text = "FPS: --"
 local modeLbl = Instance.new("TextLabel", pbFrame)
 modeLbl.Name = "Mode"
 modeLbl.BackgroundTransparency = 1
-modeLbl.Size = UDim2.new(0, 160, 0, 16)
-modeLbl.Position = UDim2.new(0.5, -80, 0, 22)
+modeLbl.Size = UDim2.new(0, 100, 0, 18)
+modeLbl.Position = UDim2.new(0.5, -50, 0, 16)
 modeLbl.Font = Enum.Font.GothamBold
 modeLbl.TextSize = 12
 modeLbl.TextColor3 = Color3.fromRGB(230, 230, 235)
@@ -16591,8 +16463,8 @@ modeLbl.Text = "AUTO GRAB"
 local pingLbl = Instance.new("TextLabel", pbFrame)
 pingLbl.Name = "Ping"
 pingLbl.BackgroundTransparency = 1
-pingLbl.Size = UDim2.new(0, 100, 0, 14)
-pingLbl.Position = UDim2.new(1, -112, 0, 22)
+pingLbl.Size = UDim2.new(0, 92, 0, 16)
+pingLbl.Position = UDim2.new(1, -104, 0, 18)
 pingLbl.Font = Enum.Font.GothamBold
 pingLbl.TextSize = 11
 pingLbl.TextColor3 = Color3.fromRGB(190, 190, 195)
@@ -16612,35 +16484,37 @@ stealBarTag.TextColor3 = Color3.fromRGB(150, 150, 155)
 stealBarTag.TextXAlignment = Enum.TextXAlignment.Center
 stealBarTag.ZIndex = 5
 stealBarTag.Text = "STEAL BAR"
+stealBarTag.Visible = false
 
 -- Progress track
 local pbg = Instance.new("Frame", pbFrame)
 pbg.Name = "Track"
-pbg.Size = UDim2.new(1, -90, 0, 6)
-pbg.Position = UDim2.new(0, 80, 1, -16)
-pbg.BackgroundColor3 = Color3.fromRGB(40, 40, 44)
+pbg.Size = UDim2.new(1, -36, 0, 9)
+pbg.Position = UDim2.new(0, 18, 1, -20)
+pbg.BackgroundColor3 = Color3.fromRGB(24, 13, 32)
 pbg.BorderSizePixel = 0
 pbg.ClipsDescendants = true
 pbg.ZIndex = 4
 Instance.new("UICorner", pbg).CornerRadius = UDim.new(1, 0)
 local pbgStroke = Instance.new("UIStroke", pbg)
-pbgStroke.Color = Color3.fromRGB(120, 120, 125)
+pbgStroke.Color = Color3.fromRGB(105, 39, 91)
 pbgStroke.Transparency = 0.55
 pbgStroke.Thickness = 1
 
 local progressFill = Instance.new("Frame", pbg)
 progressFill.Name = "Fill"
 progressFill.Size = UDim2.new(0, 0, 1, 0)
-progressFill.BackgroundColor3 = Color3.fromRGB(235, 235, 240)
-progressFill.BackgroundTransparency = 0.05
+progressFill.BackgroundColor3 = Color3.fromRGB(255, 45, 169)
+progressFill.BackgroundTransparency = 0.02
 progressFill.BorderSizePixel = 0
 progressFill.ZIndex = 5
 Instance.new("UICorner", progressFill).CornerRadius = UDim.new(1, 0)
 local fillGrad = Instance.new("UIGradient", progressFill)
 fillGrad.Rotation = 0
 fillGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(170, 170, 175)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 74, 190)),
+    ColorSequenceKeypoint.new(0.55, Color3.fromRGB(255, 42, 164)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(190, 50, 255)),
 })
 
 function _G.ExeApplyStealUIImage() end
@@ -16649,15 +16523,15 @@ local barState = "IDLE"
 local function setBarState(state)
     barState = state
     if state == "STEALING" then
-        TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(255, 255, 255), Transparency = 0.05, Thickness = 1.8}):Play()
+        TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(255, 45, 169), Transparency = 0.02, Thickness = 2.2}):Play()
         TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
         TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
     elseif state == "READY" then
-        TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(190, 190, 195), Transparency = 0.2, Thickness = 1.4}):Play()
+        TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(225, 55, 165), Transparency = 0.05, Thickness = 2.0}):Play()
         TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(240, 240, 245)}):Play()
         TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(220, 220, 225)}):Play()
     else
-        TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(140, 140, 145), Transparency = 0.35, Thickness = 1.2}):Play()
+        TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(145, 40, 115), Transparency = 0.12, Thickness = 1.8}):Play()
         TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
         TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(200, 200, 205)}):Play()
     end
@@ -16688,9 +16562,8 @@ task.spawn(function()
         end)
         fpsLbl.Text = string.format("FPS: %d", math.floor(fpsAvg + 0.5))
         pingLbl.Text = string.format("PING: %dms", math.floor(ping + 0.5))
-        local modeName = tostring(selectedStealMode or "AUTO GRAB"):upper()
-        if modeName == "AUTO STEAL V3" then modeName = "AUTO GRAB V3" end
-        modeLbl.Text = modeName
+        local duelModeName = tostring(_G.ExeDuelMode or "half"):lower()
+        modeLbl.Text = (duelModeName == "full") and "FULL" or "SEMI"
         pcall(function()
             timeLbl.Text = os.date("%a %b %d  %I:%M:%S %p")
         end)
