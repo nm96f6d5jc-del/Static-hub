@@ -1,3 +1,4 @@
+
 local env = (type(getgenv) == "function" and getgenv()) or _G
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -7,7 +8,6 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 })
 
 return
-
 -- Static Hub Duel Script
 -- Original source credit: Xlu0 AndPrime
 
