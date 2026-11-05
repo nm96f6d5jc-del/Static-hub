@@ -1,13 +1,4 @@
 
-local env = (type(getgenv) == "function" and getgenv()) or _G
-
-game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "Static Hub Debug",
-    Text = tostring(env.StaticHubKey),
-    Duration = 10
-})
-
-return
 -- Static Hub Duel Script
 -- Original source credit: Xlu0 AndPrime
 
