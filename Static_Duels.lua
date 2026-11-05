@@ -1,3 +1,34 @@
+-- STATIC HUB LICENCE CHECK
+local __SH_ENV = (type(getgenv) == "function" and getgenv()) or _G
+local __SH_KEY = __SH_ENV.StaticHubKey
+
+if not __SH_KEY or __SH_KEY == "" then
+    warn("Static Hub: Invalid Key")
+    return
+end
+
+local __SH_HTTP = game:GetService("HttpService")
+local __SH_URL = "https://cfvotmcmpyhsxczptdct.supabase.co/functions/v1/static-hub-license?key=" .. __SH_HTTP:UrlEncode(__SH_KEY)
+
+local __SH_OK, __SH_RESULT = pcall(function()
+    return game:HttpGet(__SH_URL)
+end)
+
+if not __SH_OK then
+    warn("Static Hub: Licence check failed")
+    return
+end
+
+local __SH_DATA_OK, __SH_DATA = pcall(function()
+    return __SH_HTTP:JSONDecode(__SH_RESULT)
+end)
+
+if not __SH_DATA_OK or __SH_DATA.valid ~= true then
+    warn("Static Hub: Invalid Key")
+    return
+end
+
+-- LICENCE VERIFIED
 -- Static Hub Duel Script
 -- Original source credit: Xlu0 AndPrime
 
