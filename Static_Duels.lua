@@ -13416,6 +13416,211 @@ right.Activated:Connect(function() setSkyIndex(skyIndex + 1) end)
 return row
 end
 
+
+-- ===== STATIC HUB VISUAL PREVIEW PANEL (LOCAL PREVIEW ONLY) =====
+do
+    local previewState = {outline = true, box = false, tracer = false, boxMode = "Normal"}
+    local previewPanel = Instance.new("Frame")
+    previewPanel.Name = "StaticHubVisualPreview"
+    previewPanel.Size = UDim2.new(1, -4, 0, 250)
+    previewPanel.BackgroundColor3 = Color3.fromRGB(8, 8, 11)
+    previewPanel.BackgroundTransparency = 0.04
+    previewPanel.BorderSizePixel = 0
+    previewPanel.ClipsDescendants = true
+    previewPanel.LayoutOrder = 50
+    previewPanel.Visible = true
+    previewPanel.Parent = Utility
+    corner(previewPanel, 12)
+    stroke(previewPanel, Color3.fromRGB(126, 82, 220), 1.2, 0.18)
+
+    local previewTitle = Instance.new("TextLabel")
+    previewTitle.BackgroundTransparency = 1
+    previewTitle.Size = UDim2.new(1, -16, 0, 24)
+    previewTitle.Position = UDim2.new(0, 10, 0, 6)
+    previewTitle.Font = Enum.Font.GothamBold
+    previewTitle.Text = "LIVE VISUAL PREVIEW"
+    previewTitle.TextSize = 11
+    previewTitle.TextColor3 = Color3.fromRGB(240, 232, 255)
+    previewTitle.TextXAlignment = Enum.TextXAlignment.Left
+    previewTitle.Parent = previewPanel
+
+    local viewport = Instance.new("ViewportFrame")
+    viewport.Name = "AvatarPreview"
+    viewport.Position = UDim2.new(0, 10, 0, 36)
+    viewport.Size = UDim2.new(0.48, -12, 1, -46)
+    viewport.BackgroundColor3 = Color3.fromRGB(3, 3, 5)
+    viewport.BorderSizePixel = 0
+    viewport.Ambient = Color3.fromRGB(170, 170, 190)
+    viewport.LightColor = Color3.fromRGB(255, 255, 255)
+    viewport.Parent = previewPanel
+    corner(viewport, 9)
+    stroke(viewport, Color3.fromRGB(70, 52, 112), 1, 0.25)
+
+    local world = Instance.new("WorldModel")
+    world.Parent = viewport
+    local camera = Instance.new("Camera")
+    camera.FieldOfView = 35
+    camera.Parent = viewport
+    viewport.CurrentCamera = camera
+
+    local previewModel
+    local previewHighlight
+    local spinConnection
+    local function rebuildPreview()
+        if spinConnection then spinConnection:Disconnect(); spinConnection = nil end
+        if previewModel then previewModel:Destroy(); previewModel = nil end
+        local character = LP and LP.Character
+        if not character then return end
+        local oldArchivable = character.Archivable
+        character.Archivable = true
+        local ok, clone = pcall(function() return character:Clone() end)
+        character.Archivable = oldArchivable
+        if not ok or not clone then return end
+        previewModel = clone
+        for _, obj in ipairs(clone:GetDescendants()) do
+            if obj:IsA("Script") or obj:IsA("LocalScript") or obj:IsA("Tool") then
+                obj:Destroy()
+            elseif obj:IsA("BasePart") then
+                obj.Anchored = true
+                obj.CanCollide = false
+            end
+        end
+        clone.Parent = world
+        local rootPart = clone:FindFirstChild("HumanoidRootPart") or clone:FindFirstChildWhichIsA("BasePart")
+        if not rootPart then return end
+        clone:PivotTo(CFrame.new(0, 0, 0))
+        local _, size = clone:GetBoundingBox()
+        camera.CFrame = CFrame.lookAt(Vector3.new(0, size.Y * 0.08, math.max(size.Y * 2.5, 6)), Vector3.new(0, size.Y * 0.05, 0))
+        previewHighlight = Instance.new("Highlight")
+        previewHighlight.Name = "PreviewOutline"
+        previewHighlight.Adornee = clone
+        previewHighlight.FillTransparency = 1
+        previewHighlight.OutlineColor = Color3.fromRGB(190, 145, 255)
+        previewHighlight.OutlineTransparency = 0
+        previewHighlight.Enabled = previewState.outline
+        previewHighlight.Parent = world
+        local angle = 0
+        spinConnection = RunService.RenderStepped:Connect(function(dt)
+            if not previewModel or not previewModel.Parent then return end
+            angle = angle + dt * 0.55
+            previewModel:PivotTo(CFrame.new(0, 0, 0) * CFrame.Angles(0, angle, 0))
+        end)
+    end
+    rebuildPreview()
+    if LP and LP.CharacterAdded then
+        LP.CharacterAdded:Connect(function()
+            task.wait(1)
+            rebuildPreview()
+        end)
+    end
+
+    local overlay = Instance.new("Frame")
+    overlay.Name = "PreviewOverlay"
+    overlay.BackgroundTransparency = 1
+    overlay.Size = viewport.Size
+    overlay.Position = viewport.Position
+    overlay.ZIndex = 5
+    overlay.Parent = previewPanel
+    local boxOverlay = Instance.new("Frame")
+    boxOverlay.BackgroundTransparency = 1
+    boxOverlay.Size = UDim2.new(0.48, 0, 0.72, 0)
+    boxOverlay.Position = UDim2.new(0.26, 0, 0.14, 0)
+    boxOverlay.Visible = previewState.box
+    boxOverlay.ZIndex = 6
+    boxOverlay.Parent = overlay
+    stroke(boxOverlay, Color3.fromRGB(255, 255, 255), 1.5, 0)
+    local tracerOverlay = Instance.new("Frame")
+    tracerOverlay.AnchorPoint = Vector2.new(0.5, 1)
+    tracerOverlay.Position = UDim2.new(0.5, 0, 0.97, 0)
+    tracerOverlay.Size = UDim2.new(0, 2, 0.65, 0)
+    tracerOverlay.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    tracerOverlay.BorderSizePixel = 0
+    tracerOverlay.Visible = previewState.tracer
+    tracerOverlay.ZIndex = 7
+    tracerOverlay.Parent = overlay
+    corner(tracerOverlay, 2)
+
+    local controls = Instance.new("Frame")
+    controls.BackgroundTransparency = 1
+    controls.Position = UDim2.new(0.52, 4, 0, 36)
+    controls.Size = UDim2.new(0.48, -14, 1, -46)
+    controls.Parent = previewPanel
+    local controlLayout = Instance.new("UIListLayout")
+    controlLayout.Padding = UDim.new(0, 6)
+    controlLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    controlLayout.Parent = controls
+
+    local function previewToggle(labelText, key, order)
+        local b = Instance.new("TextButton")
+        b.Name = key .. "PreviewToggle"
+        b.Size = UDim2.new(1, 0, 0, 30)
+        b.BackgroundColor3 = Color3.fromRGB(19, 16, 27)
+        b.BorderSizePixel = 0
+        b.AutoButtonColor = false
+        b.Font = Enum.Font.GothamSemibold
+        b.TextSize = 10
+        b.TextColor3 = Color3.fromRGB(238, 232, 250)
+        b.LayoutOrder = order
+        b.Parent = controls
+        corner(b, 7)
+        stroke(b, Color3.fromRGB(105, 76, 155), 1, 0.25)
+        local function paint()
+            b.Text = labelText .. (previewState[key] and "  •  ON" or "  •  OFF")
+            b.BackgroundColor3 = previewState[key] and Color3.fromRGB(55, 35, 82) or Color3.fromRGB(19, 16, 27)
+        end
+        paint()
+        b.Activated:Connect(function()
+            previewState[key] = not previewState[key]
+            if key == "outline" and previewHighlight then previewHighlight.Enabled = previewState.outline end
+            if key == "box" then boxOverlay.Visible = previewState.box end
+            if key == "tracer" then tracerOverlay.Visible = previewState.tracer end
+            paint()
+        end)
+    end
+    previewToggle("Outline", "outline", 1)
+    previewToggle("Box", "box", 2)
+    previewToggle("Tracer", "tracer", 3)
+
+    local modeButton = Instance.new("TextButton")
+    modeButton.Name = "BoxModeDropdown"
+    modeButton.Size = UDim2.new(1, 0, 0, 30)
+    modeButton.BackgroundColor3 = Color3.fromRGB(19, 16, 27)
+    modeButton.BorderSizePixel = 0
+    modeButton.AutoButtonColor = false
+    modeButton.Font = Enum.Font.GothamSemibold
+    modeButton.TextSize = 10
+    modeButton.TextColor3 = Color3.fromRGB(238, 232, 250)
+    modeButton.Text = "Box Style: Normal  ▾"
+    modeButton.LayoutOrder = 4
+    modeButton.Parent = controls
+    corner(modeButton, 7)
+    stroke(modeButton, Color3.fromRGB(105, 76, 155), 1, 0.25)
+    modeButton.Activated:Connect(function()
+        previewState.boxMode = previewState.boxMode == "Normal" and "3D" or "Normal"
+        modeButton.Text = "Box Style: " .. previewState.boxMode .. "  ▾"
+        boxOverlay.Size = previewState.boxMode == "3D" and UDim2.new(0.42, 0, 0.66, 0) or UDim2.new(0.48, 0, 0.72, 0)
+        boxOverlay.Position = previewState.boxMode == "3D" and UDim2.new(0.29, 0, 0.17, 0) or UDim2.new(0.26, 0, 0.14, 0)
+    end)
+
+    local refreshButton = Instance.new("TextButton")
+    refreshButton.Name = "RefreshAvatarPreview"
+    refreshButton.Size = UDim2.new(1, 0, 0, 26)
+    refreshButton.BackgroundColor3 = Color3.fromRGB(30, 23, 42)
+    refreshButton.BorderSizePixel = 0
+    refreshButton.AutoButtonColor = false
+    refreshButton.Font = Enum.Font.GothamSemibold
+    refreshButton.TextSize = 10
+    refreshButton.TextColor3 = Color3.fromRGB(225, 213, 245)
+    refreshButton.Text = "Refresh Avatar"
+    refreshButton.LayoutOrder = 5
+    refreshButton.Parent = controls
+    corner(refreshButton, 7)
+    stroke(refreshButton, Color3.fromRGB(105, 76, 155), 1, 0.35)
+    refreshButton.Activated:Connect(rebuildPreview)
+end
+-- ===== END VISUAL PREVIEW PANEL =====
+
+
 section(Utility, "CHARACTER VISUALS", -3)
 
 _, _G.ExeHeadlessVisual = toggleRow(Utility, "Headless", _G.ExeHeadlessEnabled, -2)
