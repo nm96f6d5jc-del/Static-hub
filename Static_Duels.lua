@@ -34,12 +34,12 @@ end
 -- Static Hub Duel Script
 -- Original source credit: Xlu0 AndPrime
 
--- NXC HUB duplicate-execution guard
+-- STATIC HUB duplicate-execution guard
 local __NXC_ENV = (type(getgenv) == "function" and getgenv()) or _G
-if __NXC_ENV.__NXC_HUB_PAID_DUELS_RUNNING then
+if __STATIC_ENV.__STATIC_HUB_PAID_DUELS_RUNNING then
     return
 end
-__NXC_ENV.__NXC_HUB_PAID_DUELS_RUNNING = true
+__STATIC.ENV.__STATIC_HUB_PAID_DUELS_RUNNING = true
 
 Players = game:GetService("Players")
 UserInputService = game:GetService("UserInputService")
@@ -162,10 +162,10 @@ setAutoCarrySpeedVisual = nil
 _G.ExeAutoCarryWasCarrying = false
 _G.ExeAutoCarrySavedMode = nil
 autoStealEnabled = false
-selectedStealMode = "Auto Steal V3"
+selectedStealMode = "Auto Steal V1"
 autoStealRadius = 63
-_G.ExeStealRadii = _G.ExeStealRadii or {["Auto Steal V3"] = 63, Semi = 9}
-_G.ExeStealRadii["Auto Steal V3"] = tonumber(_G.ExeStealRadii["Auto Steal V3"] or _G.ExeStealRadii.Normal) or 63
+_G.ExeStealRadii = _G.ExeStealRadii or {["Auto Steal V1"] = 63, Semi = 9}
+_G.ExeStealRadii["Auto Steal V1"] = tonumber(_G.ExeStealRadii["Auto Steal V1"] or _G.ExeStealRadii.Normal) or 63
 autoStealRadiusBox = nil
 selectedAimbotMode = "Normal"
 AIMBOT_SPEED = 67.2
@@ -176,15 +176,15 @@ _G.ExeBatV2On = false
 _G.ExeBatV2State = _G.ExeBatV2State or {conn = nil, prevAutoRotate = nil}
 _G.ExeAntiBypassAimbotSpeed = _G.ExeAntiBypassAimbotSpeed or 65
 if _G.ExeAntiBypassLaggerAimbotSpeed == nil or tonumber(_G.ExeAntiBypassLaggerAimbotSpeed) == 58 then _G.ExeAntiBypassLaggerAimbotSpeed = 40 end
-autoSwingEnabled = false
+autoSwingEnabled = True
 mirrorTPDownEnabled = false
 _G.ExeNormalAimbotOn = _G.ExeNormalAimbotOn or false
 _G.ExeAntiBypassAimbotOn = _G.ExeAntiBypassAimbotOn or false
 antiDesyncAutoSwingEnabled = false
 _G.ExeAntiDesyncAimbotOn = _G.ExeAntiDesyncAimbotOn or false
 ANTI_DESYNC_AIMBOT_SPEED = 58
-batCounterEnabled = false
-medCounterEnabled = false
+batCounterEnabled = True
+medCounterEnabled = True
 hardHitEnabled = false
 hardHitRadius = 10
 perfectHitEnabled = false
@@ -196,7 +196,7 @@ antiKickEnabled = false
 setSafeModeVisual = nil
 autoResetOnMedEnabled = false
 espEnabled = false
-showTracerEnabled = false
+showTracerEnabled = True
 ragdollCountdownEnabled = true
 fpsBoostEnabled = false
 antiLagVisualEnabled = false
@@ -343,11 +343,11 @@ _G.ExeDropMode = "Jump Drop"
 -- DROP AFTER: after Drop is pressed, auto turn on the chosen mode in 0.20s
 _G.ExeDropAfterModes = {"Off", "Bat Aimbot", "BAT V2", "Anti Bat Bypass"}
 _G.ExeDropAfterMode = _G.ExeDropAfterMode or "Off"
-_G.ExeDropAfterDelay = 0.20
+_G.ExeDropAfterDelay = 0.10
 function _G.ExeRunDropAfter()
     local mode = _G.ExeDropAfterMode
     if mode == nil or mode == "Off" then return end
-    task.delay(_G.ExeDropAfterDelay or 0.20, function()
+    task.delay(_G.ExeDropAfterDelay or 0.10, function()
         pcall(function()
             if mode == "Bat Aimbot" then
                 if selectedAimbotMode == "Anti Bypass" then
@@ -1934,7 +1934,7 @@ if ok and introSongCache[fileName] then return introSongCache[fileName] end
 return loadExisting()
 end
 function preloadIntroSongs()
--- intro songs disabled
+-- intro songs enabled
 end
 
 ADAPT_INTRO_MUSIC_OPTIONS = {
@@ -2041,10 +2041,10 @@ end
 function playIntroMusic()
     stopIntroPreview()
     stopIntroPlayback()
-    -- intro disabled
+    -- intro enabled
 end
 
--- intro song preload disabled
+-- intro song preload enabled
 function makeIntroSoundFromId(soundId, name, parent)
 if not soundId then return nil end
 local sound = Instance.new("Sound")
@@ -2080,9 +2080,9 @@ end
 function playIntroMusic()
 stopIntroPreview()
 stopIntroPlayback()
--- intro disabled
+-- intro enabled
 end
--- preloadIntroSongs() disabled
+-- preloadIntroSongs() enabled
 
 savedConfig = {}
 _G.ExeGuiLocked = _G.ExeGuiLocked == true
@@ -2253,7 +2253,7 @@ autoRightEnabled = autoRightEnabled,
 currentBackground = currentBackground,
 bodyLockEnabled = _G.ExeBodyLockEnabled == true,
 bodyLockRadius = tonumber(_G.ExeBodyLockRadius) or 60,
-tpBatVersion = (_G.ExeTpBatSelected == "V2") and "V2" or "V1",
+tpBatVersion = (_G.ExeTpBatSelected == "V3") and "V2" or "V1",
 mobileButtonScale = tonumber(_G.ExeMobileButtonScale) or 0.75,
 guiScaleValue = tonumber(_G.ExeGuiScaleValue) or tonumber(adaptGuiScaleValue) or tonumber(aceGuiScaleValue) or 0.52,
 stealUiScaleValue = tonumber(_G.ExeProgressBarScaleValue) or tonumber(aceProgressBarScaleValue) or 0.83,
@@ -2281,7 +2281,7 @@ mobileButtonShape = _G.ExeMobileButtonShape or "ROUNDED",
 stealUIImage = _G.ExeStealUIImage or "",
 autoStealV3Radius = tonumber((_G.ExeStealRadii and _G.ExeStealRadii["Auto Steal V3"]) or autoStealRadius) or 63,
 aceStealRadii = {
-    ["Auto Steal V3"] = tonumber((_G.ExeStealRadii and _G.ExeStealRadii["Auto Steal V3"]) or autoStealRadius) or 63,
+    ["Auto Steal V1"] = tonumber((_G.ExeStealRadii and _G.ExeStealRadii["Auto Steal V3"]) or autoStealRadius) or 63,
     Semi = tonumber((_G.ExeStealRadii and _G.ExeStealRadii.Semi) or 9) or 9,
 },
 duelMode = _G.ExeDuelMode or "half",
@@ -2343,9 +2343,9 @@ end)
 end
 -- autosave: anything that changed gets written every few seconds (starts after the hub finished loading)
 task.spawn(function()
-task.wait(20)
-while true do
 task.wait(5)
+while true do
+task.wait(3)
 pcall(saveExeConfig)
 end
 end)
@@ -2414,9 +2414,9 @@ end
 _G.ExeStealUIImage = tostring(data.stealUIImage or "")
 if data.autoStealV3Radius ~= nil then
     _G.ExeStealRadii = _G.ExeStealRadii or {}
-    _G.ExeStealRadii["Auto Steal V3"] = tonumber(data.autoStealV3Radius) or 63
-    if selectedStealMode == "Auto Steal V3" then
-        autoStealRadius = _G.ExeStealRadii["Auto Steal V3"]
+    _G.ExeStealRadii["Auto Steal V1"] = tonumber(data.autoStealV3Radius) or 63
+    if selectedStealMode == "Auto Steal V1" then
+        autoStealRadius = _G.ExeStealRadii["Auto Steal V1"]
         if autoStealRadiusBox then
             autoStealRadiusBox.Text = tostring(autoStealRadius)
         end
@@ -2496,28 +2496,28 @@ if unwalkEnabled then
 end
 _G.ExeOutfitIndex = math.max(1, math.floor(tonumber(data.currentOutfitIndex) or 1))
 selectedStealMode = data.selectedStealMode or selectedStealMode
-if selectedStealMode == "Auto Steal V3" then selectedStealMode = "Auto Steal V3" end
-if selectedStealMode ~= "Semi" then selectedStealMode = "Auto Steal V3" end
+if selectedStealMode == "Auto Steal V1" then selectedStealMode = "Auto Steal V1" end
+if selectedStealMode ~= "Semi" then selectedStealMode = "Auto Steal V1" end
 autoStealEnabled = data.autoStealEnabled == true
 if type(data.aceStealRadii) == "table" then
-_G.ExeStealRadii["Auto Steal V3"] = tonumber(
-    data.aceStealRadii["Auto Steal V3"]
+_G.ExeStealRadii["Auto Steal V1"] = tonumber(
+    data.aceStealRadii["Auto Steal V1"]
     or data.aceStealRadii.Normal
     or data.autoStealV3Radius
-) or _G.ExeStealRadii["Auto Steal V3"] or 63
+) or _G.ExeStealRadii["Auto Steal V1"] or 63
 _G.ExeStealRadii.Semi = tonumber(data.aceStealRadii.Semi) or _G.ExeStealRadii.Semi or 9
 end
 autoStealRadius = tonumber(data.autoStealRadius) or autoStealRadius
-_G.ExeStealRadii = _G.ExeStealRadii or {["Auto Steal V3"] = 63, Semi = 9}
+_G.ExeStealRadii = _G.ExeStealRadii or {["Auto Steal V1"] = 63, Semi = 9}
 
-if selectedStealMode == "Auto Steal V3" then
+if selectedStealMode == "Auto Steal V1" then
     autoStealRadius = tonumber(
         data.autoStealV3Radius
-        or _G.ExeStealRadii["Auto Steal V3"]
+        or _G.ExeStealRadii["Auto Steal V1"]
         or autoStealRadius
         or 63
     ) or 63
-    _G.ExeStealRadii["Auto Steal V3"] = autoStealRadius
+    _G.ExeStealRadii["Auto Steal V1"] = autoStealRadius
 else
     autoStealRadius = tonumber(_G.ExeStealRadii.Semi) or 9
 end
@@ -2529,7 +2529,7 @@ BAT_V2_SPEED = math.clamp(tonumber(data.BAT_V2_SPEED) or tonumber(_G.ExeBatV2Spe
 _G.ExeBatV2Speed = BAT_V2_SPEED
 _G.ExeAntiBypassAimbotSpeed = tonumber(data.ANTI_BYPASS_AIMBOT_SPEED) or _G.ExeAntiBypassAimbotSpeed or 65
 if data.ANTI_BYPASS_LAGGER_AIMBOT_SPEED == nil or tonumber(data.ANTI_BYPASS_LAGGER_AIMBOT_SPEED) == 58 then
-_G.ExeAntiBypassLaggerAimbotSpeed = 40
+_G.ExeAntiBypassLaggerAimbotSpeed = 45
 else
 _G.ExeAntiBypassLaggerAimbotSpeed = tonumber(data.ANTI_BYPASS_LAGGER_AIMBOT_SPEED) or 40
 end
@@ -2553,7 +2553,7 @@ if _G.ExePerfectHitState then _G.ExePerfectHitState.range = perfectHitRange end
 antiKickEnabled = false
 autoResetOnMedEnabled = false
 espEnabled = data.espEnabled == true
-showTracerEnabled = false
+showTracerEnabled = enabled
 ragdollCountdownEnabled = true
 fpsBoostEnabled = data.fpsBoostEnabled == true
 antiLagVisualEnabled = data.antiLagVisualEnabled == true
