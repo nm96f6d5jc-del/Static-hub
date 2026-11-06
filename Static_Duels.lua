@@ -6801,8 +6801,8 @@ MiniFrame.Position = MINI_DEFAULT_POSITION
 MiniFrame.BackgroundColor3 = Color3.fromRGB(8, 5, 18)
 MiniFrame.BackgroundTransparency = 1
 MiniFrame.BorderSizePixel = 0
-MiniFrame.Text = "STATIC DUELS"
-MiniFrame.TextColor3 = Color3.fromRGB(205, 218, 255)
+MiniFrame.Text = "STATIC HUB"
+MiniFrame.TextColor3 = Color3.fromRGB(255, 255, 255)
 MiniFrame.Font = Enum.Font.GothamBlack
 MiniFrame.TextSize = math.clamp(math.floor(miniBtnHeight * 0.30), 12, 16)
 MiniFrame.AutoButtonColor = false
@@ -7122,7 +7122,7 @@ SubTitle.TextSize = 10
 SubTitle.TextXAlignment = Enum.TextXAlignment.Left
 SubTitle.ZIndex = 12
 SubTitle.Parent = HeaderBar
-SubTitle.Visible = true
+SubTitle.Visible = false
 
 -- Main logo removed (Calcium-style header text only)
 local ExeLogoAsset = nil
@@ -7295,6 +7295,7 @@ ProfileCard.Size = UDim2.new(0, 140, 0, 40)
 ProfileCard.Position = UDim2.new(1, -270, 0.5, -20)
 ProfileCard.ZIndex = 12
 ProfileCard.Parent = HeaderBar
+ProfileCard.Visible = false -- header avatar/profile removed by request
 
 local Avatar = Instance.new("ImageLabel")
 Avatar.Name = "Avatar"
@@ -12756,10 +12757,26 @@ frame.Name = "Frame"
 frame.Size = UDim2.new(0, W, 0, H)
 frame.AnchorPoint = Vector2.new(0.5, 0.5)
 frame.Position = UDim2.new(0.5, 0, 0.5, 0)
-frame.BackgroundColor3 = Color3.fromRGB(9, 9, 12)
+frame.BackgroundColor3 = Color3.fromRGB(25, 10, 43)
 frame.BorderSizePixel = 0
 frame.ZIndex = 2
 frame.Parent = mpGui
+
+-- Dark-purple music player backdrop. Add your uploaded Gojo image asset ID here.
+local MUSIC_GOJO_IMAGE_ID = 0
+local musicGojoBackdrop = Instance.new("ImageLabel")
+musicGojoBackdrop.Name = "GojoBackdrop"
+musicGojoBackdrop.BackgroundTransparency = 1
+musicGojoBackdrop.BorderSizePixel = 0
+musicGojoBackdrop.Size = UDim2.new(1, 0, 1, 0)
+musicGojoBackdrop.Position = UDim2.new(0, 0, 0, 0)
+musicGojoBackdrop.ScaleType = Enum.ScaleType.Crop
+musicGojoBackdrop.ImageTransparency = 0.72
+musicGojoBackdrop.ZIndex = 2
+musicGojoBackdrop.Parent = frame
+if MUSIC_GOJO_IMAGE_ID > 0 then
+    musicGojoBackdrop.Image = "rbxassetid://" .. tostring(MUSIC_GOJO_IMAGE_ID)
+end
 local mpScale = Instance.new("UIScale")
 mpScale.Name = "MusicPlayerScale"
 do
@@ -12770,7 +12787,7 @@ mpScale.Scale = math.clamp(math.min(0.58, fit), 0.3, 0.58)
 end
 mpScale.Parent = frame
 corner(frame, 20)
-stroke(frame, Color3.fromRGB(92, 92, 96), 1.2, 0.18)
+stroke(frame, Color3.fromRGB(145, 85, 205), 1.2, 0.18)
 local mpGlow = Instance.new("UIStroke")
 mpGlow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 mpGlow.Color = Color3.fromRGB(225, 225, 235)
@@ -12782,9 +12799,9 @@ local mpBgGrad = Instance.new("UIGradient")
 mpBgGrad.Name = "BackgroundGradient"
 mpBgGrad.Rotation = 115
 mpBgGrad.Color = ColorSequence.new({
-ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 24)),
-ColorSequenceKeypoint.new(0.45, Color3.fromRGB(8, 8, 11)),
-ColorSequenceKeypoint.new(1, Color3.fromRGB(15, 15, 18)),
+ColorSequenceKeypoint.new(0, Color3.fromRGB(42, 18, 67)),
+ColorSequenceKeypoint.new(0.45, Color3.fromRGB(18, 7, 32)),
+ColorSequenceKeypoint.new(1, Color3.fromRGB(32, 12, 52)),
 })
 mpBgGrad.Parent = frame
 local innerStroke = Instance.new("UIStroke")
@@ -13545,6 +13562,24 @@ do
     controls.Position = UDim2.new(0.52, 4, 0, 36)
     controls.Size = UDim2.new(0.48, -14, 1, -46)
     controls.Parent = previewPanel
+
+    local previewNotice = Instance.new("TextLabel")
+    previewNotice.Name = "PreviewESPNotice"
+    previewNotice.BackgroundColor3 = Color3.fromRGB(10, 7, 18)
+    previewNotice.BackgroundTransparency = 0.16
+    previewNotice.BorderSizePixel = 0
+    previewNotice.Size = UDim2.new(0.48, -14, 0, 28)
+    previewNotice.Position = UDim2.new(0.52, 4, 1, -32)
+    previewNotice.Font = Enum.Font.GothamBlack
+    previewNotice.Text = "ESP: NOT WORKING YET"
+    previewNotice.TextColor3 = Color3.fromRGB(255, 255, 255)
+    previewNotice.TextSize = 9
+    previewNotice.TextXAlignment = Enum.TextXAlignment.Center
+    previewNotice.ZIndex = 8
+    previewNotice.Parent = previewPanel
+    corner(previewNotice, 7)
+    stroke(previewNotice, Color3.fromRGB(145, 95, 220), 1, 0.15)
+
     local controlLayout = Instance.new("UIListLayout")
     controlLayout.Padding = UDim.new(0, 6)
     controlLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -16596,7 +16631,7 @@ pbFrame.Name = "StealBar"
 pbFrame.Size = UDim2.new(0, 420, 0, 72)
 local defaultStealPos = UDim2.new(0.5, -210, 1, -90)
 pbFrame.Position = tableToUDim2(_G.ExeStealBarPosition, defaultStealPos)
-pbFrame.BackgroundColor3 = Color3.fromRGB(5, 4, 12)
+pbFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 pbFrame.BackgroundTransparency = 0.02
 pbFrame.BorderSizePixel = 0
 pbFrame.Active = true
@@ -16604,15 +16639,15 @@ pbFrame.ClipsDescendants = true
 Instance.new("UICorner", pbFrame).CornerRadius = UDim.new(0, 18)
 
 local pbSt = Instance.new("UIStroke", pbFrame)
-pbSt.Color = Color3.fromRGB(105, 55, 190)
+pbSt.Color = Color3.fromRGB(235, 235, 235)
 pbSt.Thickness = 2.2
 pbSt.Transparency = 0.02
 
 local pbGrad = Instance.new("UIGradient", pbFrame)
 pbGrad.Rotation = 90
 pbGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(13, 8, 22)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(5, 4, 11)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(245, 245, 245)),
 })
 
 drag(pbFrame)
@@ -16654,7 +16689,7 @@ timeLbl.Size = UDim2.new(0, 160, 0, 12)
 timeLbl.Position = UDim2.new(0, 68, 0, 8)
 timeLbl.Font = Enum.Font.GothamMedium
 timeLbl.TextSize = 10
-timeLbl.TextColor3 = Color3.fromRGB(160, 160, 165)
+timeLbl.TextColor3 = Color3.fromRGB(75, 75, 80)
 timeLbl.TextXAlignment = Enum.TextXAlignment.Left
 timeLbl.ZIndex = 5
 timeLbl.Text = ""
@@ -16668,7 +16703,7 @@ progressPct.Size = UDim2.new(0, 72, 0, 26)
 progressPct.Position = UDim2.new(0, 18, 0, 10)
 progressPct.Font = Enum.Font.GothamBlack
 progressPct.TextSize = 20
-progressPct.TextColor3 = Color3.fromRGB(255, 255, 255)
+progressPct.TextColor3 = Color3.fromRGB(20, 20, 20)
 progressPct.TextXAlignment = Enum.TextXAlignment.Left
 progressPct.ZIndex = 5
 progressPct.Text = "0%"
@@ -16681,7 +16716,7 @@ fpsLbl.Size = UDim2.new(0, 82, 0, 16)
 fpsLbl.Position = UDim2.new(1, -190, 0, 18)
 fpsLbl.Font = Enum.Font.GothamBold
 fpsLbl.TextSize = 11
-fpsLbl.TextColor3 = Color3.fromRGB(140, 140, 145)
+fpsLbl.TextColor3 = Color3.fromRGB(75, 75, 80)
 fpsLbl.TextXAlignment = Enum.TextXAlignment.Left
 fpsLbl.ZIndex = 5
 fpsLbl.Text = "FPS: --"
@@ -16694,7 +16729,7 @@ modeLbl.Size = UDim2.new(0, 100, 0, 18)
 modeLbl.Position = UDim2.new(0.5, -50, 0, 16)
 modeLbl.Font = Enum.Font.GothamBold
 modeLbl.TextSize = 12
-modeLbl.TextColor3 = Color3.fromRGB(230, 230, 235)
+modeLbl.TextColor3 = Color3.fromRGB(25, 25, 25)
 modeLbl.TextXAlignment = Enum.TextXAlignment.Center
 modeLbl.ZIndex = 5
 modeLbl.Text = "AUTO GRAB"
@@ -16707,7 +16742,7 @@ pingLbl.Size = UDim2.new(0, 92, 0, 16)
 pingLbl.Position = UDim2.new(1, -104, 0, 18)
 pingLbl.Font = Enum.Font.GothamBold
 pingLbl.TextSize = 11
-pingLbl.TextColor3 = Color3.fromRGB(190, 190, 195)
+pingLbl.TextColor3 = Color3.fromRGB(75, 75, 80)
 pingLbl.TextXAlignment = Enum.TextXAlignment.Right
 pingLbl.ZIndex = 5
 pingLbl.Text = "PING: --ms"
@@ -16720,7 +16755,7 @@ stealBarTag.Size = UDim2.new(0, 56, 0, 12)
 stealBarTag.Position = UDim2.new(0, 6, 0, 50)
 stealBarTag.Font = Enum.Font.GothamBold
 stealBarTag.TextSize = 8
-stealBarTag.TextColor3 = Color3.fromRGB(150, 150, 155)
+stealBarTag.TextColor3 = Color3.fromRGB(80, 80, 85)
 stealBarTag.TextXAlignment = Enum.TextXAlignment.Center
 stealBarTag.ZIndex = 5
 stealBarTag.Text = "STEAL BAR"
@@ -16737,14 +16772,14 @@ pbg.ClipsDescendants = true
 pbg.ZIndex = 4
 Instance.new("UICorner", pbg).CornerRadius = UDim.new(1, 0)
 local pbgStroke = Instance.new("UIStroke", pbg)
-pbgStroke.Color = Color3.fromRGB(112, 65, 190)
+pbgStroke.Color = Color3.fromRGB(225, 225, 225)
 pbgStroke.Transparency = 0.08
 pbgStroke.Thickness = 1
 
 local progressFill = Instance.new("Frame", pbg)
 progressFill.Name = "Fill"
 progressFill.Size = UDim2.new(0, 0, 1, 0)
-progressFill.BackgroundColor3 = Color3.fromRGB(255, 45, 169)
+progressFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 progressFill.BackgroundTransparency = 0.02
 progressFill.BorderSizePixel = 0
 progressFill.ZIndex = 5
@@ -16752,9 +16787,9 @@ Instance.new("UICorner", progressFill).CornerRadius = UDim.new(1, 0)
 local fillGrad = Instance.new("UIGradient", progressFill)
 fillGrad.Rotation = 0
 fillGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 74, 190)),
-    ColorSequenceKeypoint.new(0.55, Color3.fromRGB(255, 42, 164)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(190, 50, 255)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+    ColorSequenceKeypoint.new(0.55, Color3.fromRGB(245, 245, 245)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(225, 225, 225)),
 })
 
 function _G.ExeApplyStealUIImage() end
@@ -16763,17 +16798,17 @@ local barState = "IDLE"
 local function setBarState(state)
     barState = state
     if state == "STEALING" then
-        TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(125, 72, 205), Transparency = 0.02, Thickness = 2.2}):Play()
-        TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
-        TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+        TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(235, 235, 235), Transparency = 0.02, Thickness = 2.2}):Play()
+        TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(20, 20, 20)}):Play()
+        TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(25, 25, 25)}):Play()
     elseif state == "READY" then
-        TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(112, 62, 185), Transparency = 0.05, Thickness = 2.0}):Play()
-        TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(240, 240, 245)}):Play()
-        TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(220, 220, 225)}):Play()
+        TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(225, 225, 225), Transparency = 0.05, Thickness = 2.0}):Play()
+        TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(20, 20, 20)}):Play()
+        TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(25, 25, 25)}):Play()
     else
-        TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(82, 45, 145), Transparency = 0.12, Thickness = 1.8}):Play()
-        TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
-        TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(200, 200, 205)}):Play()
+        TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(210, 210, 210), Transparency = 0.12, Thickness = 1.8}):Play()
+        TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(20, 20, 20)}):Play()
+        TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(25, 25, 25)}):Play()
     end
 end
 
@@ -16802,8 +16837,8 @@ task.spawn(function()
         end)
         fpsLbl.Text = string.format("FPS: %d", math.floor(fpsAvg + 0.5))
         pingLbl.Text = string.format("PING: %dms", math.floor(ping + 0.5))
-        local duelModeName = tostring(_G.ExeDuelMode or "half"):lower()
-        modeLbl.Text = (duelModeName == "full") and "FULL" or "SEMI"
+        local stealModeName = tostring(selectedStealMode or "Auto Steal V3")
+        modeLbl.Text = (stealModeName == "Semi") and "SEMI" or "AUTO STEAL V3"
         pcall(function()
             timeLbl.Text = os.date("%a %b %d  %I:%M:%S %p")
         end)
