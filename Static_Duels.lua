@@ -4734,7 +4734,7 @@ _G.ExeNormalAutoStealStart=function()
 if GS.conn then GS.conn:Disconnect();GS.conn=nil end
 GS.enabled=true
 GS.StealRadius=tonumber(autoStealRadius) or 63
-GS.StealDuration=1.3
+GS.StealDuration=1.0
 GS.TriggerRadius=10
 GS.conn=RunService.Heartbeat:Connect(function()
 if not GS.enabled or GS.active then return end
