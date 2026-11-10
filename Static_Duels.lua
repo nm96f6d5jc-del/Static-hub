@@ -7366,7 +7366,7 @@ TabLayout.Parent = Tabs
 local pages = {}
 local tabButtons = {}
 local tabUnderline = {}
-local tabNames = {"MOVEMENT", "COMBAT", "VISUALS", "KEYBINDS", "SETTINGS", "PING BYPASSER"}
+local tabNames = {"MOVEMENT", "COMBAT", "VISUALS", "KEYBINDS", "SETTINGS"}
 local activeTab = "MOVEMENT"
 -- MENU page kept for controller binds compatibility
 local _extraPages = {"MENU"}
@@ -7417,23 +7417,18 @@ for _, name in ipairs(tabNames) do
 addPage(name)
 local btn = Instance.new("TextButton")
 btn.Name = name
-btn.Size = UDim2.new(1 / #tabNames, -4, 0, 30)
+btn.Size = UDim2.new(0, 82, 0, 30)
 btn.BackgroundColor3 = Color3.fromRGB(14, 14, 16)
 btn.BackgroundTransparency = 0.45
 btn.BorderSizePixel = 0
 btn.Text = name
-btn.LayoutOrder = ({MOVEMENT=1, COMBAT=2, VISUALS=3, KEYBINDS=4, SETTINGS=5, ["PING BYPASSER"]=6})[name] or 99
+btn.LayoutOrder = ({MOVEMENT=1, COMBAT=2, VISUALS=3, KEYBINDS=4, SETTINGS=5})[name] or 99
 btn.TextColor3 = Color3.fromRGB(140, 140, 145)
 btn.TextStrokeColor3 = Color3.fromRGB(0,0,0)
 btn.TextStrokeTransparency = 1
-btn.TextSize = 10
-btn.TextScaled = true
+btn.TextSize = 11
+btn.TextScaled = false
 btn.TextWrapped = false
-btn.TextTruncate = Enum.TextTruncate.AtEnd
-local tabTextLimit = Instance.new("UITextSizeConstraint")
-tabTextLimit.MinTextSize = 7
-tabTextLimit.MaxTextSize = 11
-tabTextLimit.Parent = btn
 btn.Font = Enum.Font.GothamBold
 btn.AutoButtonColor = false
 btn.ZIndex = 6
@@ -8996,133 +8991,6 @@ end
 
 task.wait()
 Movement = pages.MOVEMENT
-
--- PING BYPASSER: matching GUI controls only. This is a visual/settings panel;
--- it does not alter network latency or bypass Roblox server checks.
-do
-    local PingPage = pages["PING BYPASSER"]
-    local pingCard = Instance.new("Frame")
-    pingCard.Name = "PingBypassCard"
-    pingCard.BackgroundColor3 = Color3.fromRGB(14, 14, 16)
-    pingCard.BackgroundTransparency = 0.12
-    pingCard.BorderSizePixel = 0
-    pingCard.Size = UDim2.new(1, -4, 0, 174)
-    pingCard.LayoutOrder = 1
-    pingCard.ZIndex = 4
-    pingCard.Parent = PingPage
-    corner(pingCard, 12)
-    stroke(pingCard, Color3.fromRGB(40, 40, 45), 1, 0.35)
-
-    local cardPadding = Instance.new("UIPadding")
-    cardPadding.PaddingTop = UDim.new(0, 9)
-    cardPadding.PaddingBottom = UDim.new(0, 9)
-    cardPadding.PaddingLeft = UDim.new(0, 9)
-    cardPadding.PaddingRight = UDim.new(0, 9)
-    cardPadding.Parent = pingCard
-
-    local cardLayout = Instance.new("UIListLayout")
-    cardLayout.FillDirection = Enum.FillDirection.Vertical
-    cardLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    cardLayout.Padding = UDim.new(0, 6)
-    cardLayout.Parent = pingCard
-
-    local cardTitle = Instance.new("TextLabel")
-    cardTitle.Name = "CardTitle"
-    cardTitle.BackgroundTransparency = 1
-    cardTitle.Size = UDim2.new(1, 0, 0, 20)
-    cardTitle.LayoutOrder = 0
-    cardTitle.Text = "PING BYPASS"
-    cardTitle.TextColor3 = Color3.fromRGB(245, 245, 245)
-    cardTitle.TextSize = 12
-    cardTitle.Font = Enum.Font.GothamBold
-    cardTitle.TextXAlignment = Enum.TextXAlignment.Left
-    cardTitle.ZIndex = 5
-    cardTitle.Parent = pingCard
-
-    local pingEnabled = false
-    local pingToggleRow, setPingToggleVisual = toggleRow(pingCard, "Turn On / Off", false, 1)
-    pingToggleRow.Size = UDim2.new(1, 0, 0, 34)
-    local pingToggleButton = pingToggleRow:FindFirstChild("ToggleButton")
-    if pingToggleButton then
-        pingToggleButton.Activated:Connect(function()
-            pingEnabled = not pingEnabled
-            setPingToggleVisual(pingEnabled)
-        end)
-    end
-
-    local modeRow, modeButton = dropdownRow(pingCard, "Mode", "Auto Brainrot", 2)
-    modeRow.Size = UDim2.new(1, 0, 0, 34)
-    modeButton.Size = UDim2.new(0, 112, 0, 24)
-    modeButton.Position = UDim2.new(1, -122, 0.5, -12)
-    modeButton.Text = "Auto Brainrot  v"
-    local modePopup = Instance.new("Frame")
-    modePopup.Name = "ModeOptions"
-    modePopup.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
-    modePopup.BorderSizePixel = 0
-    modePopup.Size = UDim2.new(0, 112, 0, 28)
-    modePopup.Position = UDim2.new(1, -122, 1, 1)
-    modePopup.Visible = false
-    modePopup.ZIndex = 30
-    modePopup.Parent = modeRow
-    corner(modePopup, 7)
-    stroke(modePopup, Color3.fromRGB(150, 150, 150), 1, 0.2)
-    local modeOption = Instance.new("TextButton")
-    modeOption.Name = "AutoBrainrotOption"
-    modeOption.BackgroundTransparency = 1
-    modeOption.Size = UDim2.fromScale(1, 1)
-    modeOption.Text = "Auto Brainrot"
-    modeOption.TextColor3 = Color3.fromRGB(0, 0, 0)
-    modeOption.TextSize = 11
-    modeOption.Font = Enum.Font.GothamBold
-    modeOption.ZIndex = 31
-    modeOption.Parent = modePopup
-    modeButton.Activated:Connect(function()
-        modePopup.Visible = not modePopup.Visible
-        modeButton.Text = modePopup.Visible and "Auto Brainrot  ^" or "Auto Brainrot  v"
-    end)
-    modeOption.Activated:Connect(function()
-        modePopup.Visible = false
-        modeButton.Text = "Auto Brainrot  v"
-    end)
-
-    local rawPingValue = 0
-    local function formatPingNumber(n)
-        n = math.max(0, math.floor(tonumber(n) or 0))
-        if n >= 1000000 then
-            local v = n / 1000000
-            return (string.format("%.2f", v):gsub("0+$", ""):gsub("%.$", "")) .. "m"
-        elseif n >= 1000 then
-            local v = n / 1000
-            return (string.format("%.2f", v):gsub("0+$", ""):gsub("%.$", "")) .. "k"
-        end
-        return tostring(n)
-    end
-    local valueRow, pingValueBox = textboxRow(pingCard, "Ping Value", "0", 3)
-    valueRow.Size = UDim2.new(1, 0, 0, 34)
-    pingValueBox.Size = UDim2.new(0, 96, 0, 24)
-    pingValueBox.Position = UDim2.new(1, -106, 0.5, -12)
-    pingValueBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    pingValueBox.BackgroundTransparency = 0
-    pingValueBox.TextColor3 = Color3.fromRGB(0, 0, 0)
-    pingValueBox.PlaceholderText = "Numbers only"
-    pingValueBox.PlaceholderColor3 = Color3.fromRGB(110, 110, 110)
-    pingValueBox.ClearTextOnFocus = false
-    pingValueBox:GetPropertyChangedSignal("Text"):Connect(function()
-        local cleaned = pingValueBox.Text:gsub("%D", "")
-        if cleaned ~= pingValueBox.Text then
-            local cursor = pingValueBox.CursorPosition
-            pingValueBox.Text = cleaned
-            if cursor >= 0 then pingValueBox.CursorPosition = math.min(cursor, #cleaned + 1) end
-        end
-    end)
-    pingValueBox.Focused:Connect(function()
-        pingValueBox.Text = tostring(rawPingValue)
-    end)
-    pingValueBox.FocusLost:Connect(function()
-        rawPingValue = tonumber(pingValueBox.Text:gsub("%D", "")) or 0
-        pingValueBox.Text = formatPingNumber(rawPingValue)
-    end)
-end
 
 section(Movement, "AUTO SPEED", -2)
 _, setAutoCarrySpeedVisual = toggleRow(Movement, "Auto Carry Speed", autoCarrySpeedEnabled, -1)
