@@ -101,6 +101,90 @@ end
 LP = Players.LocalPlayer
 PlayerGui = LP:WaitForChild("PlayerGui")
 
+-- Static Hub Discord tag: client-side overhead label that follows each player's Head.
+local STATIC_HUB_DISCORD_TEXT = "discord.gg/Static Hub"
+local STATIC_HUB_DISCORD_TAG = "StaticHubDiscordOverhead"
+local function addStaticHubDiscordTag(player, character)
+    if not player or not character then return end
+    local head = character:FindFirstChild("Head") or character:WaitForChild("Head", 8)
+    if not head or not head.Parent then return end
+    local oldTag = head:FindFirstChild(STATIC_HUB_DISCORD_TAG)
+    if oldTag then oldTag:Destroy() end
+
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = STATIC_HUB_DISCORD_TAG
+    billboard.Adornee = head
+    billboard.AlwaysOnTop = true
+    billboard.LightInfluence = 0
+    billboard.Size = UDim2.fromOffset(190, 38)
+    billboard.StudsOffset = Vector3.new(0, 2.75, 0)
+    billboard.MaxDistance = 250
+    billboard.Parent = head
+
+    local label = Instance.new("TextLabel")
+    label.Name = "DiscordText"
+    label.BackgroundTransparency = 1
+    label.Size = UDim2.fromScale(1, 1)
+    label.Position = UDim2.fromScale(0, 0)
+    label.Text = STATIC_HUB_DISCORD_TEXT
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    label.TextStrokeTransparency = 0.08
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = 14
+    label.TextScaled = false
+    label.ZIndex = 3
+    label.Parent = billboard
+
+    -- Expanding black outline rings create a looping ripple without moving the tag.
+    for rippleIndex = 1, 2 do
+        local ripple = Instance.new("Frame")
+        ripple.Name = "BlackRipple" .. rippleIndex
+        ripple.AnchorPoint = Vector2.new(0.5, 0.5)
+        ripple.Position = UDim2.fromScale(0.5, 0.5)
+        ripple.Size = UDim2.fromOffset(18, 18)
+        ripple.BackgroundTransparency = 1
+        ripple.BorderSizePixel = 0
+        ripple.ZIndex = 2
+        ripple.Parent = billboard
+        local round = Instance.new("UICorner")
+        round.CornerRadius = UDim.new(1, 0)
+        round.Parent = ripple
+        local outline = Instance.new("UIStroke")
+        outline.Color = Color3.fromRGB(0, 0, 0)
+        outline.Thickness = 1.5
+        outline.Transparency = 0.18
+        outline.Parent = ripple
+        task.spawn(function()
+            while ripple.Parent and billboard.Parent do
+                ripple.Size = UDim2.fromOffset(18, 18)
+                outline.Transparency = 0.18
+                local expand = TweenService:Create(ripple, TweenInfo.new(1.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.fromOffset(184, 34)
+                })
+                local fade = TweenService:Create(outline, TweenInfo.new(1.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Transparency = 1
+                })
+                if rippleIndex == 2 then task.wait(0.57) end
+                if not ripple.Parent then break end
+                expand:Play()
+                fade:Play()
+                expand.Completed:Wait()
+                task.wait(0.05)
+            end
+        end)
+    end
+end
+
+local function watchStaticHubPlayer(player)
+    if player.Character then task.defer(addStaticHubDiscordTag, player, player.Character) end
+    player.CharacterAdded:Connect(function(character)
+        task.defer(addStaticHubDiscordTag, player, character)
+    end)
+end
+for _, player in ipairs(Players:GetPlayers()) do watchStaticHubPlayer(player) end
+Players.PlayerAdded:Connect(watchStaticHubPlayer)
+
 function getUndetectedGuiParent()
 
     if type(gethui) == "function" then
@@ -6448,6 +6532,26 @@ Starfield.Position = UDim2.new(0, 0, 0, 0)
 Starfield.ClipsDescendants = true
 Starfield.ZIndex = 2
 Starfield.Parent = Main
+-- Black, sharp lightning streaks sit behind the interface content.
+local lightningRng = Random.new(38104)
+for streakIndex = 1, 7 do
+    local x = lightningRng:NextNumber(0.04, 0.88)
+    local y = lightningRng:NextNumber(0.08, 0.88)
+    local baseRotation = lightningRng:NextInteger(-28, 28)
+    for segmentIndex = 1, 3 do
+        local segment = Instance.new("Frame")
+        segment.Name = "BlackLightning_" .. streakIndex .. "_" .. segmentIndex
+        segment.AnchorPoint = Vector2.new(0.5, 0.5)
+        segment.Position = UDim2.new(x + (segmentIndex - 1) * 0.012, 0, y + (segmentIndex - 1) * 0.025, 0)
+        segment.Size = UDim2.new(0, lightningRng:NextInteger(24, 54), 0, lightningRng:NextInteger(2, 3))
+        segment.Rotation = baseRotation + ((segmentIndex % 2 == 0) and 38 or -24)
+        segment.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        segment.BackgroundTransparency = lightningRng:NextNumber(0.18, 0.38)
+        segment.BorderSizePixel = 0
+        segment.ZIndex = 3
+        segment.Parent = Starfield
+    end
+end
 local starRng = Random.new(61427)
 for i = 1, 42 do
     local star = Instance.new("TextLabel")
@@ -6628,6 +6732,28 @@ MiniExeStroke.Thickness = 1.6
 MiniExeStroke.Transparency = 0.04
 MiniExeStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 MiniExeStroke.Parent = MiniFrame
+MiniFrame.ClipsDescendants = true
+local miniLightning = Instance.new("Frame")
+miniLightning.Name = "MiniBlackLightning"
+miniLightning.BackgroundTransparency = 1
+miniLightning.BorderSizePixel = 0
+miniLightning.Size = UDim2.fromScale(1, 1)
+miniLightning.ClipsDescendants = true
+miniLightning.ZIndex = 101
+miniLightning.Parent = MiniFrame
+for i = 1, 3 do
+    local slash = Instance.new("Frame")
+    slash.Name = "MiniLightningStreak" .. i
+    slash.AnchorPoint = Vector2.new(0.5, 0.5)
+    slash.Position = UDim2.new((i - 1) * 0.34 + 0.18, 0, (i % 2 == 0) and 0.22 or 0.78, 0)
+    slash.Size = UDim2.new(0, math.max(16, math.floor(miniBtnWidth * 0.28)), 0, 2)
+    slash.Rotation = (i % 2 == 0) and -24 or 24
+    slash.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    slash.BackgroundTransparency = 0.12
+    slash.BorderSizePixel = 0
+    slash.ZIndex = 102
+    slash.Parent = miniLightning
+end
 
 -- keep MiniButton alias for any old refs
 local MiniButton = MiniFrame
@@ -6867,8 +6993,9 @@ Title.TextColor3 = Color3.fromRGB(0, 0, 0)
 Title.TextStrokeColor3 = Color3.fromRGB(145, 70, 220)
 Title.TextStrokeTransparency = 1
 Title.Font = Enum.Font.GothamBlack
-Title.TextSize = 30
-Title.TextScaled = true
+Title.TextSize = 29
+Title.TextScaled = false
+Title.TextTruncate = Enum.TextTruncate.AtEnd
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.ZIndex = 12
 Title.Parent = HeaderBar
@@ -14652,14 +14779,14 @@ pcall(function()
     Main.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     for _, obj in ipairs(Main:GetDescendants()) do
         if obj:IsA("Frame") or obj:IsA("ScrollingFrame") then
-            if obj.BackgroundTransparency < 1 then
+            if obj.BackgroundTransparency < 1 and not obj.Name:find("BlackLightning") then
                 obj.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             end
             local outline = obj:FindFirstChildOfClass("UIStroke")
             if outline then outline.Color = Color3.fromRGB(150, 150, 150) end
         elseif obj:IsA("TextLabel") then
             obj.TextColor3 = Color3.fromRGB(0, 0, 0)
-            obj.Font = Enum.Font.GothamBold
+            obj.Font = (obj.Name == "Title") and Enum.Font.GothamBlack or Enum.Font.GothamBold
         elseif obj:IsA("TextButton") then
             obj.TextColor3 = Color3.fromRGB(0, 0, 0)
             obj.Font = Enum.Font.GothamBold
@@ -15103,8 +15230,9 @@ end
 local function setActive(btn, state)
 if not btn then return end
 local pressed = btn:GetAttribute("ExeMobilePressed") == true
-state = (state == true) or pressed
-local visualState = state and "on" or "off"
+-- The requested mobile style is white at rest and black only during a press.
+state = pressed
+local visualState = state and "pressed" or "rest"
 if btn:GetAttribute("ExeMobileVisualState") == visualState then return end
 btn:SetAttribute("ExeMobileVisualState", visualState)
 local holder = btn.Parent
@@ -15124,12 +15252,12 @@ if noneBg then
         noneBg.Image = ""
         noneBg.ImageTransparency = 1
     end
-    local targetBg = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(0, 0, 0)
+    local targetBg = state and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
     TS:Create(noneBg, TweenInfo.new(0.12), {BackgroundColor3 = targetBg}):Play()
 end
 if textOverlay then
     TS:Create(textOverlay, TweenInfo.new(0.12), {
-        TextColor3 = state and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255),
+        TextColor3 = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(0, 0, 0),
     }):Play()
 end
 if st then
@@ -15178,7 +15306,7 @@ local btn = Instance.new("TextButton", holder)
 btn.Name = "MB_" .. key
 btn.Size = UDim2.new(1, 0, 1, 0)
 btn.Position = UDim2.new(0, 0, 0, 0)
-btn.BackgroundColor3 = Color3.fromRGB(0,0,0)
+btn.BackgroundColor3 = Color3.fromRGB(255,255,255)
 btn.BackgroundTransparency = 1
 btn.BorderSizePixel = 0
 btn.Text = label
@@ -15195,7 +15323,7 @@ local noneBg = Instance.new("Frame", btn)
 noneBg.Name = "ButtonNoneBackground"
 noneBg.Size = UDim2.new(1,0,1,0)
 noneBg.Position = UDim2.new(0,0,0,0)
-noneBg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+noneBg.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 noneBg.BorderSizePixel = 0
 noneBg.ZIndex = btn.ZIndex
 noneBg.Parent = btn
@@ -15216,7 +15344,7 @@ textOverlay.BackgroundTransparency = 1
 textOverlay.Size = UDim2.new(1, -10, 1, -10)
 textOverlay.Position = UDim2.new(0, 5, 0, 5)
 textOverlay.Text = label
-textOverlay.TextColor3 = Color3.fromRGB(255,255,255)
+textOverlay.TextColor3 = Color3.fromRGB(0,0,0)
 textOverlay.TextStrokeColor3 = Color3.fromRGB(0,0,0)
 textOverlay.TextStrokeTransparency = 1
 textOverlay.Font = Enum.Font.GothamBold
