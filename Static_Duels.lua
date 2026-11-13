@@ -6413,13 +6413,13 @@ savedMainPositionTable = savedMainPositionTable or udim2ToTable(Main.Position)
 
 -- ExeOpenMainUI / ExeCloseMainUI defined after MiniFrame
 
-Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Main.BackgroundColor3 = Color3.fromRGB(4, 3, 8)
 Main.BorderSizePixel = 0
 Main.Active = true
 Main.ClipsDescendants = false
 Main.Parent = Gui
 corner(Main, 22)
-stroke(Main, Color3.fromRGB(255, 255, 255), 1.6, 0.04)
+stroke(Main, Color3.fromRGB(139, 75, 220), 1.5, 0.08)
 
 -- STATIC DUELS: blue-chrome starfield background.
 -- To show Gojo, upload your chosen Gojo artwork to Roblox and set GOJO_IMAGE_ID
@@ -6463,31 +6463,6 @@ for i = 1, 42 do
     star.Position = UDim2.new(starRng:NextNumber(0.02, 0.94), 0, starRng:NextNumber(0.02, 0.94), 0)
     star.ZIndex = 2
     star.Parent = Starfield
-end
-
--- Subtle monochrome lightning streaks behind the interface content.
-local lightningRng = Random.new(731904)
-for streakIndex = 1, 8 do
-    local x = lightningRng:NextNumber(0.06, 0.94)
-    local y = lightningRng:NextNumber(0.08, 0.88)
-    local direction = lightningRng:NextNumber(-1, 1)
-    for segmentIndex = 1, 6 do
-        local segment = Instance.new("Frame")
-        segment.Name = "BackgroundLightning"
-        segment.AnchorPoint = Vector2.new(0.5, 0)
-        segment.BorderSizePixel = 0
-        segment.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
-        segment.BackgroundTransparency = lightningRng:NextNumber(0.58, 0.76)
-        local length = lightningRng:NextNumber(12, 25)
-        segment.Size = UDim2.new(0, lightningRng:NextInteger(1, 2), 0, length)
-        segment.Position = UDim2.new(x, 0, y, 0)
-        segment.Rotation = direction * 28
-        segment.ZIndex = 2
-        segment.Parent = Starfield
-        y = y + 0.035
-        x = math.clamp(x + direction * 0.012 + lightningRng:NextNumber(-0.012, 0.012), 0.02, 0.98)
-        direction = math.clamp(direction + lightningRng:NextNumber(-0.55, 0.55), -1, 1)
-    end
 end
 
 -- UI idle transparency: after 5s without interaction, toggles fade a bit
@@ -6594,13 +6569,16 @@ local MENU_BG_IMAGE_ID = 0 -- Replace 0 with the Roblox asset ID for the Gojo im
 MiniFrame.Size = UDim2.new(0, miniBtnWidth, 0, miniBtnHeight)
 local MINI_DEFAULT_POSITION = UDim2.new(0, 20, 0.5, -miniBtnHeight / 2)
 MiniFrame.Position = MINI_DEFAULT_POSITION
-MiniFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MiniFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 MiniFrame.BackgroundTransparency = 0
 MiniFrame.BorderSizePixel = 0
-MiniFrame.Text = "STATIC HUB"
-MiniFrame.TextColor3 = Color3.fromRGB(255, 255, 255)
+MiniFrame.Text = "MONO HUB"
+MiniFrame.TextColor3 = Color3.fromRGB(0, 0, 0)
 MiniFrame.Font = Enum.Font.GothamBlack
-MiniFrame.TextSize = math.clamp(math.floor(miniBtnHeight * 0.36), 15, 19)
+MiniFrame.TextSize = math.clamp(math.floor(miniBtnHeight * 0.34), 13, 17)
+MiniFrame.TextScaled = true
+MiniFrame.TextWrapped = false
+MiniFrame.TextTruncate = Enum.TextTruncate.AtEnd
 MiniFrame.AutoButtonColor = false
 MiniFrame.Visible = false
 MiniFrame.Active = true
@@ -6609,7 +6587,7 @@ MiniFrame.Parent = Gui
 corner(MiniFrame, math.floor(miniBtnHeight * 0.35))
 local MiniBackdrop = Instance.new("ImageLabel")
 MiniBackdrop.Name = "GojoMenuBackground"
-MiniBackdrop.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MiniBackdrop.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 MiniBackdrop.BackgroundTransparency = 1
 MiniBackdrop.Visible = false
 MiniBackdrop.BorderSizePixel = 0
@@ -6633,8 +6611,8 @@ miniChrome.Color = ColorSequence.new({
 miniChrome.Parent = MiniFrame
 miniChrome.Enabled = false
 MiniFrame.BackgroundTransparency = 0
-MiniFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-MiniFrame.TextColor3 = Color3.fromRGB(255, 255, 255)
+MiniFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+MiniFrame.TextColor3 = Color3.fromRGB(0, 0, 0)
 function _STATIC_HUBClampMini(pos)
     local cam = Workspace.CurrentCamera
     local vp = cam and cam.ViewportSize or Vector2.new(800, 600)
@@ -6648,7 +6626,7 @@ if type(savedMiniPositionTable) == "table" then
     MiniFrame.Position = _STATIC_HUBClampMini(tableToUDim2(savedMiniPositionTable, MINI_DEFAULT_POSITION))
 end
 local MiniExeStroke = Instance.new("UIStroke")
-MiniExeStroke.Color = Color3.fromRGB(255, 255, 255)
+MiniExeStroke.Color = Color3.fromRGB(0, 0, 0)
 MiniExeStroke.Thickness = 1.6
 MiniExeStroke.Transparency = 0.04
 MiniExeStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
@@ -6830,7 +6808,7 @@ applyBackground(0)
 -- Static Hub header: clean black starfield, purple/white bold lettering.
 local HeaderBar = Instance.new("Frame")
 HeaderBar.Name = "HeaderBar"
-HeaderBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+HeaderBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 HeaderBar.BackgroundTransparency = 0.02
 HeaderBar.BorderSizePixel = 0
 HeaderBar.Size = UDim2.new(1, -20, 0, 56)
@@ -6838,7 +6816,7 @@ HeaderBar.Position = UDim2.new(0, 10, 0, 10)
 HeaderBar.ZIndex = 8
 HeaderBar.Parent = Main
 corner(HeaderBar, 14)
-stroke(HeaderBar, Color3.fromRGB(255, 255, 255), 1.4, 0.02)
+stroke(HeaderBar, Color3.fromRGB(0, 0, 0), 1.4, 0.02)
 
 local HEADER_BG_IMAGE_ID = 0 -- Replace 0 with the Roblox asset ID for the cat image
 local HeaderPhoto = Instance.new("ImageLabel")
@@ -6885,14 +6863,14 @@ end
 local Title = Instance.new("TextLabel")
 Title.Name = "Title"
 Title.BackgroundTransparency = 1
-Title.Size = UDim2.new(1, -104, 1, -2)
-Title.Position = UDim2.new(0, 16, 0, 1)
-Title.Text = "STATIC HUB"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Size = UDim2.new(1, -34, 1, -4)
+Title.Position = UDim2.new(0, 22, 0, 2)
+Title.Text = "MONO HUB"
+Title.TextColor3 = Color3.fromRGB(0, 0, 0)
 Title.TextStrokeColor3 = Color3.fromRGB(145, 70, 220)
-Title.TextStrokeTransparency = 0.55
+Title.TextStrokeTransparency = 1
 Title.Font = Enum.Font.GothamBlack
-Title.TextSize = 35
+Title.TextSize = 30
 Title.TextScaled = true
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.ZIndex = 12
@@ -6903,11 +6881,11 @@ TitleChromeGradient.Name = "PurpleWhiteLettering"
 TitleChromeGradient.Rotation = 90
 TitleChromeGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-    ColorSequenceKeypoint.new(0.35, Color3.fromRGB(225, 225, 225)),
-    ColorSequenceKeypoint.new(0.68, Color3.fromRGB(150, 150, 150)),
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))
+    ColorSequenceKeypoint.new(0.35, Color3.fromRGB(221, 194, 255)),
+    ColorSequenceKeypoint.new(0.68, Color3.fromRGB(158, 93, 230)),
+    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(250, 245, 255))
 })
-TitleChromeGradient.Enabled = true
+TitleChromeGradient.Enabled = false
 TitleChromeGradient.Parent = Title
 
 local SubTitle = Instance.new("TextLabel")
@@ -6929,7 +6907,7 @@ local ExeLogoAsset = nil
 
 local TitleSweepText = Title:Clone()
 TitleSweepText.Name = "TitleSweepText"
-TitleSweepText.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleSweepText.TextColor3 = Color3.fromRGB(0, 0, 0)
 TitleSweepText.TextTransparency = 0
 TitleSweepText.TextStrokeTransparency = 1
 TitleSweepText.BackgroundTransparency = 1
@@ -7391,7 +7369,7 @@ TabLayout.Parent = Tabs
 local pages = {}
 local tabButtons = {}
 local tabUnderline = {}
-local tabNames = {"MOVEMENT", "COMBAT", "VISUALS", "KEYBINDS", "SETTINGS"}
+local tabNames = {"MOVEMENT", "COMBAT", "VISUALS", "KEYBINDS", "SETTINGS", "LAGGER"}
 local activeTab = "MOVEMENT"
 -- MENU page kept for controller binds compatibility
 local _extraPages = {"MENU"}
@@ -7442,12 +7420,12 @@ for _, name in ipairs(tabNames) do
 addPage(name)
 local btn = Instance.new("TextButton")
 btn.Name = name
-btn.Size = UDim2.new(0, 82, 0, 30)
+btn.Size = UDim2.new(0, 68, 0, 30)
 btn.BackgroundColor3 = Color3.fromRGB(14, 14, 16)
 btn.BackgroundTransparency = 0.45
 btn.BorderSizePixel = 0
 btn.Text = name
-btn.LayoutOrder = ({MOVEMENT=1, COMBAT=2, VISUALS=3, KEYBINDS=4, SETTINGS=5})[name] or 99
+btn.LayoutOrder = ({MOVEMENT=1, COMBAT=2, VISUALS=3, KEYBINDS=4, SETTINGS=5, LAGGER=6})[name] or 99
 btn.TextColor3 = Color3.fromRGB(140, 140, 145)
 btn.TextStrokeColor3 = Color3.fromRGB(0,0,0)
 btn.TextStrokeTransparency = 1
@@ -8579,7 +8557,7 @@ local slideStroke = Instance.new("UIStroke")
 slideStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 slideStroke.Color = Color3.fromRGB(236, 236, 236)
 slideStroke.Thickness = 1
-slideStroke.Transparency = 0.04
+slideStroke.Transparency = 0.08
 slideStroke.Parent = slide
 local slideGradient = Instance.new("UIGradient")
 slideGradient.Color = ColorSequence.new({
@@ -8831,9 +8809,8 @@ local slide = Instance.new("Frame")
 slide.Name = "SelectedSlide"
 slide.BackgroundColor3 = Color3.fromRGB(59, 59, 59)
 slide.BackgroundTransparency = 0.08
-slide.Size = UDim2.new(1, -12, 1, -12)
-slide.Position = UDim2.new(0, 6, 0, 6)
-slide.ClipsDescendants = true
+slide.Size = UDim2.new(1, -8, 1, -8)
+slide.Position = UDim2.new(0, 4, 0, 4)
 slide.BorderSizePixel = 0
 slide.ZIndex = 5
 slide.Parent = holder
@@ -14415,7 +14392,7 @@ pbFrame.Name = "StealBar"
 pbFrame.Size = UDim2.new(0, 420, 0, 72)
 local defaultStealPos = UDim2.new(0.5, -210, 1, -90)
 pbFrame.Position = tableToUDim2(_G.ExeStealBarPosition, defaultStealPos)
-pbFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+pbFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 pbFrame.BackgroundTransparency = 0.02
 pbFrame.BorderSizePixel = 0
 pbFrame.Active = true
@@ -14430,8 +14407,8 @@ pbSt.Transparency = 0.02
 local pbGrad = Instance.new("UIGradient", pbFrame)
 pbGrad.Rotation = 90
 pbGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(12, 12, 12)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(245, 245, 245)),
 })
 
 drag(pbFrame)
@@ -14473,7 +14450,7 @@ timeLbl.Size = UDim2.new(0, 160, 0, 12)
 timeLbl.Position = UDim2.new(0, 68, 0, 8)
 timeLbl.Font = Enum.Font.GothamMedium
 timeLbl.TextSize = 10
-timeLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+timeLbl.TextColor3 = Color3.fromRGB(75, 75, 80)
 timeLbl.TextXAlignment = Enum.TextXAlignment.Left
 timeLbl.ZIndex = 5
 timeLbl.Text = ""
@@ -14487,7 +14464,7 @@ progressPct.Size = UDim2.new(0, 72, 0, 26)
 progressPct.Position = UDim2.new(0, 18, 0, 10)
 progressPct.Font = Enum.Font.GothamBlack
 progressPct.TextSize = 20
-progressPct.TextColor3 = Color3.fromRGB(255, 255, 255)
+progressPct.TextColor3 = Color3.fromRGB(20, 20, 20)
 progressPct.TextXAlignment = Enum.TextXAlignment.Left
 progressPct.ZIndex = 5
 progressPct.Text = "0%"
@@ -14500,7 +14477,7 @@ fpsLbl.Size = UDim2.new(0, 82, 0, 16)
 fpsLbl.Position = UDim2.new(1, -190, 0, 18)
 fpsLbl.Font = Enum.Font.GothamBold
 fpsLbl.TextSize = 11
-fpsLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+fpsLbl.TextColor3 = Color3.fromRGB(75, 75, 80)
 fpsLbl.TextXAlignment = Enum.TextXAlignment.Left
 fpsLbl.ZIndex = 5
 fpsLbl.Text = "FPS: --"
@@ -14515,7 +14492,7 @@ modeLbl.Font = Enum.Font.GothamBold
 modeLbl.TextSize = 10
 modeLbl.TextScaled = true
 modeLbl.TextWrapped = false
-modeLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+modeLbl.TextColor3 = Color3.fromRGB(25, 25, 25)
 modeLbl.TextXAlignment = Enum.TextXAlignment.Center
 modeLbl.ZIndex = 5
 modeLbl.Text = "AUTO GRAB"
@@ -14528,7 +14505,7 @@ pingLbl.Size = UDim2.new(0, 92, 0, 16)
 pingLbl.Position = UDim2.new(1, -104, 0, 18)
 pingLbl.Font = Enum.Font.GothamBold
 pingLbl.TextSize = 11
-pingLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+pingLbl.TextColor3 = Color3.fromRGB(75, 75, 80)
 pingLbl.TextXAlignment = Enum.TextXAlignment.Right
 pingLbl.ZIndex = 5
 pingLbl.Text = "PING: --ms"
@@ -14541,7 +14518,7 @@ stealBarTag.Size = UDim2.new(0, 56, 0, 12)
 stealBarTag.Position = UDim2.new(0, 6, 0, 50)
 stealBarTag.Font = Enum.Font.GothamBold
 stealBarTag.TextSize = 8
-stealBarTag.TextColor3 = Color3.fromRGB(255, 255, 255)
+stealBarTag.TextColor3 = Color3.fromRGB(80, 80, 85)
 stealBarTag.TextXAlignment = Enum.TextXAlignment.Center
 stealBarTag.ZIndex = 5
 stealBarTag.Text = "STEAL BAR"
@@ -14552,7 +14529,7 @@ local pbg = Instance.new("Frame", pbFrame)
 pbg.Name = "Track"
 pbg.Size = UDim2.new(1, -36, 0, 9)
 pbg.Position = UDim2.new(0, 18, 1, -20)
-pbg.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+pbg.BackgroundColor3 = Color3.fromRGB(24, 13, 32)
 pbg.BorderSizePixel = 0
 pbg.ClipsDescendants = true
 pbg.ZIndex = 4
@@ -14585,16 +14562,16 @@ local function setBarState(state)
     barState = state
     if state == "STEALING" then
         TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(235, 235, 235), Transparency = 0.02, Thickness = 2.2}):Play()
-        TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
-        TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+        TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(20, 20, 20)}):Play()
+        TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(25, 25, 25)}):Play()
     elseif state == "READY" then
         TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(225, 225, 225), Transparency = 0.05, Thickness = 2.0}):Play()
         TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(20, 20, 20)}):Play()
-        TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+        TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(25, 25, 25)}):Play()
     else
         TS:Create(pbSt, TweenInfo.new(0.2), {Color = Color3.fromRGB(210, 210, 210), Transparency = 0.12, Thickness = 1.8}):Play()
         TS:Create(progressPct, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(20, 20, 20)}):Play()
-        TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+        TS:Create(modeLbl, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(25, 25, 25)}):Play()
     end
 end
 
@@ -14673,54 +14650,29 @@ end)
 end
 _G.__ExeDuelsSetupMinimizeToggle()
 
--- Static Hub monochrome theme: black surfaces, bold white text, white outlines.
--- Keep toggle tracks/knobs intact so their on/off animation remains functional.
+-- Static Hub simple white theme: white surfaces, bold black text, grey buttons.
 pcall(function()
-    Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    local white = Color3.fromRGB(255, 255, 255)
-    local black = Color3.fromRGB(0, 0, 0)
+    Main.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     for _, obj in ipairs(Main:GetDescendants()) do
         if obj:IsA("Frame") or obj:IsA("ScrollingFrame") then
-            if obj.Name == "Track" or obj.Name == "Knob" or obj.Name == "Fill" then
-                -- Preserve progress-track/fill colours and toggle colours; their own
-                -- components control these states (the steal fill must remain white).
-            elseif obj.Name == "SelectedSlide" then
-                obj.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
-                obj.BackgroundTransparency = 0.04
-            elseif obj:IsA("ScrollingFrame") then
-                obj.BackgroundColor3 = black
-                obj.BackgroundTransparency = 0.22
-            elseif obj.BackgroundTransparency < 1 then
-                obj.BackgroundColor3 = black
-                obj.BackgroundTransparency = math.min(obj.BackgroundTransparency, 0.08)
+            if obj.BackgroundTransparency < 1 then
+                obj.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             end
             local outline = obj:FindFirstChildOfClass("UIStroke")
-            if outline then
-                outline.Color = white
-                outline.Transparency = math.min(outline.Transparency, 0.18)
-            end
+            if outline then outline.Color = Color3.fromRGB(150, 150, 150) end
         elseif obj:IsA("TextLabel") then
-            obj.TextColor3 = white
+            obj.TextColor3 = Color3.fromRGB(0, 0, 0)
             obj.Font = Enum.Font.GothamBold
         elseif obj:IsA("TextButton") then
-            obj.TextColor3 = white
+            obj.TextColor3 = Color3.fromRGB(0, 0, 0)
             obj.Font = Enum.Font.GothamBold
-            if obj.BackgroundTransparency < 1 then
-                obj.BackgroundColor3 = black
-                obj.BackgroundTransparency = math.min(obj.BackgroundTransparency, 0.08)
-            end
+            obj.BackgroundColor3 = Color3.fromRGB(210, 210, 210)
         elseif obj:IsA("TextBox") then
-            obj.TextColor3 = white
-            obj.PlaceholderColor3 = Color3.fromRGB(165, 165, 165)
+            obj.TextColor3 = Color3.fromRGB(0, 0, 0)
             obj.Font = Enum.Font.GothamBold
-            obj.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
-            obj.BackgroundTransparency = 0.02
-            local outline = obj:FindFirstChildOfClass("UIStroke")
-            if outline then outline.Color = white end
+            obj.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
         end
     end
-    local mainStroke = Main:FindFirstChildOfClass("UIStroke")
-    if mainStroke then mainStroke.Color = white end
 end)
 
 -- Static Hub intro removed by request; main GUI opens normally.
