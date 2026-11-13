@@ -14681,8 +14681,9 @@ pcall(function()
     local black = Color3.fromRGB(0, 0, 0)
     for _, obj in ipairs(Main:GetDescendants()) do
         if obj:IsA("Frame") or obj:IsA("ScrollingFrame") then
-            if obj.Name == "Track" or obj.Name == "Knob" then
-                -- Toggle colours are controlled by each toggle's existing setVisual function.
+            if obj.Name == "Track" or obj.Name == "Knob" or obj.Name == "Fill" then
+                -- Preserve progress-track/fill colours and toggle colours; their own
+                -- components control these states (the steal fill must remain white).
             elseif obj.Name == "SelectedSlide" then
                 obj.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
                 obj.BackgroundTransparency = 0.04
