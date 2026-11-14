@@ -7370,7 +7370,7 @@ function buildGui()
     miniTitleImage.Size = UDim2.new(0.88, 0, 0.88, 0)
     miniTitleImage.Position = UDim2.new(0.5, 0, 0.5, 0)
     miniTitleImage.BackgroundTransparency = 1
-    miniTitleImage.Image = "rbxassetid://74292144566263"
+    miniTitleImage.Image = “rbxassetid://74292144566263"
     miniTitleImage.ScaleType = Enum.ScaleType.Crop
     miniTitleImage.ZIndex = 21
 
