@@ -37,37 +37,44 @@ CleanHubGui.ZIndexBehavior=Enum.ZIndexBehavior.Global
 pcall(function() if syn and syn.protect_gui then syn.protect_gui(CleanHubGui) end end)
 if not pcall(function() CleanHubGui.Parent=game:GetService("CoreGui") end) then CleanHubGui.Parent=CleanHubPlayer:WaitForChild("PlayerGui") end
 
-local CleanHubAssets={
-    "rbxassetid://102527460927859",
-    "rbxassetid://115218770459100",
-    "rbxassetid://79239854929751",
-    "rbxassetid://132491364078344",
-    "rbxassetid://88405482927089",
-}
+local CleanHubAssets={"M","O","N","O"}
 
 local CleanHubLetters={}
 local CleanHubStarted=os.clock()
 local CleanHubFloatConnection
 local CleanHubFinished=false
 
+
+local CleanHubLetters={}
+local CleanHubStarted=os.clock()
+local CleanHubFloatConnection
+local CleanHubFinished=false
+
+local CleanHubAssets={"M","O","N","O"}
+
 for CleanHubIndex,CleanHubAsset in ipairs(CleanHubAssets) do
-    local CleanHubLetter=Instance.new("ImageLabel",CleanHubGui)
-    CleanHubLetter.Name="CleanLetter"..CleanHubIndex
+    local CleanHubLetter=Instance.new("TextLabel",CleanHubGui)
+    CleanHubLetter.Name="MonoLetter"..CleanHubIndex
     CleanHubLetter.AnchorPoint=Vector2.new(.5,.5)
-    CleanHubLetter.Size=UDim2.fromOffset(340,340)
-    CleanHubLetter.Position=UDim2.new(.5,(CleanHubIndex-3)*225,.5,-18)
+    CleanHubLetter.Size=UDim2.fromOffset(200,260)
+    CleanHubLetter.Position=UDim2.new(.5,(CleanHubIndex-2.5)*145,.5,-18)
     CleanHubLetter.BackgroundTransparency=1
-    CleanHubLetter.Image=CleanHubAsset
-    CleanHubLetter.ScaleType=Enum.ScaleType.Fit
-    CleanHubLetter.ImageTransparency=1
+    CleanHubLetter.Text=CleanHubAsset
+    CleanHubLetter.Font=Enum.Font.GothamBlack
+    CleanHubLetter.TextSize=190
+    CleanHubLetter.TextColor3=Color3.fromRGB(190,190,195)
+    CleanHubLetter.TextStrokeTransparency=0.7
+    CleanHubLetter.TextStrokeColor3=Color3.fromRGB(255,255,255)
+    CleanHubLetter.TextTransparency=1
     CleanHubLetter.ZIndex=3
     CleanHubLetters[CleanHubIndex]={image=CleanHubLetter,base=CleanHubLetter.Position,CleanHubIndex=CleanHubIndex}
     task.delay((CleanHubIndex-1)*.07,function()
         if CleanHubLetter.Parent then
-            CleanHubTweenService:Create(CleanHubLetter,TweenInfo.new(.42,Enum.EasingStyle.Quart,Enum.EasingDirection.Out),{ImageTransparency=0}):Play()
+            CleanHubTweenService:Create(CleanHubLetter,TweenInfo.new(.42,Enum.EasingStyle.Quart,Enum.EasingDirection.Out),{{TextTransparency=1}):Play()
         end
     end)
 end
+
 
 local function CleanHubFinish()
     if CleanHubFinished then return end
